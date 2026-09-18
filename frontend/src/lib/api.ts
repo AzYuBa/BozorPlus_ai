@@ -17,6 +17,32 @@ export function currentUser() {
   }
 }
 
+export function homeFor(role?: string) {
+  if (role === "buyer") return "/pulse";
+  if (role === "entrepreneur") return "/profile";
+  return "/pulse";
+}
+
+export const BUYER_NAV = [
+  { to: "/profile", label: "Profil" },
+  { to: "/pulse", label: "Bozor pulsi" },
+  { to: "/agent", label: "Xarid agenti" },
+];
+
+export const ENTREPRENEUR_NAV = [
+  { to: "/profile", label: "Profil" },
+  { to: "/plan", label: "Biznes-reja" },
+  { to: "/ledger", label: "Ovozli daftar" },
+  { to: "/pulse", label: "Bozor pulsi" },
+  { to: "/agent", label: "Xarid agenti" },
+];
+
+export function navFor(role?: string) {
+  if (role === "buyer") return BUYER_NAV;
+  if (role === "entrepreneur") return ENTREPRENEUR_NAV;
+  return BUYER_NAV;
+}
+
 export async function api(path: string, opts: RequestInit = {}) {
   const headers: Record<string, string> = {
     ...(opts.body ? { "Content-Type": "application/json" } : {}),

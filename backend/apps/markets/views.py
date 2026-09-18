@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from apps.prices.models import PriceDaily, PriceObservation
@@ -37,9 +37,6 @@ def geo(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def admin_overview(request):
-    user = request.user
-    if user.is_authenticated and getattr(user, "role", None) not in ("market_admin", "admin") and not user.is_superuser:
-        return Response(status=403)
     today = timezone.now().date()
     anomalies = PriceObservation.objects.filter(status="review").count()
     last24 = PriceObservation.objects.filter(observed_at__gte=timezone.now() - timedelta(hours=24)).count()
@@ -53,25 +50,21 @@ def admin_overview(request):
             chg = 0
             if prev and prev.close:
                 chg = (last.close - prev.close) / prev.close * 100
-            social.append({"product": p.name_uz, "price": last.close, "change_pct": round(chg, 2)})
+            social.append({"product": p.name_uz, "slug": p.slug, "price": last.close, "change_pct": round(chg, 2)})
     return Response(
         {
             "anomalies": anomalies,
             "obs_24h": last24,
             "social": social,
-            "speculation_alerts": [
-                s for s in social if s["change_pct"] >= 15
-            ],
+            "speculation_alerts": [s for s in social if s["change_pct"] >= 15],
             "source": "agregat narxlar (sotuvchi shaxsiy ma'lumoti yo'q)",
         }
     )
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def admin_report(request):
-    if request.user.role not in ("market_admin", "admin") and not request.user.is_superuser:
-        return Response(status=403)
     return Response(
         {
             "title": "Haftalik bozor hisoboti",

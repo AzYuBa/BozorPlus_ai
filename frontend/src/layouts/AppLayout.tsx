@@ -1,31 +1,21 @@
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { currentUser } from "../lib/api";
-
-const items = [
-  { to: "/pulse", label: "Bozor pulsi" },
-  { to: "/product/un", label: "Terminal" },
-  { to: "/agent", label: "Xarid agenti" },
-  { to: "/ledger", label: "Ovozli daftar" },
-  { to: "/plan", label: "Biznes-reja" },
-  { to: "/credit", label: "Kredit markazi" },
-  { to: "/tax", label: "Soliq / formallashuv" },
-  { to: "/package", label: "Kredit paketi" },
-  { to: "/market-admin", label: "Bozor paneli" },
-  { to: "/bank", label: "Bank paneli" },
-  { to: "/moderation", label: "Moderatsiya" },
-];
+import { currentUser, navFor } from "../lib/api";
 
 export default function AppLayout() {
   const nav = useNavigate();
   const loc = useLocation();
   const user = currentUser();
+  const items = navFor(user?.role);
+  const roleLabel = user?.role === "buyer" ? "Xaridor" : user?.role === "entrepreneur" ? "Tadbirkor" : user?.role;
 
   return (
     <div className="min-h-screen flex text-slate-100">
       <aside className="w-60 shrink-0 hidden md:flex flex-col border-r bg-panel/80 border-line">
         <div className="px-5 py-5">
           <div className="font-display text-xl tracking-wide text-violet-400">BozorPuls</div>
-          <div className="text-[11px] text-slate-500">Narxdan biznes-rejagacha</div>
+          <div className="text-[11px] text-slate-500">
+            {user?.role === "buyer" ? "Arzon narx va xarid" : "Moliyaviy hamroh"}
+          </div>
         </div>
         <nav className="flex-1 px-3 space-y-1">
           {items.map((it) => (
@@ -43,7 +33,7 @@ export default function AppLayout() {
           ))}
         </nav>
         <div className="p-4 text-xs text-slate-500">
-          {user ? `${user.first_name || user.username} · ${user.role}` : "mehmon"}
+          {user ? `${user.first_name || user.username} · ${roleLabel}` : "mehmon"}
           <button
             className="block mt-2 text-violet-400"
             onClick={() => {
@@ -61,7 +51,7 @@ export default function AppLayout() {
           <select
             className="bg-panel border border-line rounded-lg px-2 py-1 text-sm"
             onChange={(e) => nav(e.target.value)}
-            value={loc.pathname}
+            value={items.some((i) => i.to === loc.pathname) ? loc.pathname : items[0]?.to}
           >
             {items.map((it) => (
               <option key={it.to} value={it.to}>

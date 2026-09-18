@@ -1,36 +1,34 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
+import RoleGate from "./layouts/RoleGate";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import Pulse from "./pages/Pulse";
-import Product from "./pages/Product";
 import Agent from "./pages/Agent";
 import Ledger from "./pages/Ledger";
 import Plan from "./pages/Plan";
-import Stress from "./pages/Stress";
-import Credit from "./pages/Credit";
-import Tax from "./pages/Tax";
-import Package from "./pages/Package";
-import MarketAdmin from "./pages/MarketAdmin";
-import Bank from "./pages/Bank";
-import Moderation from "./pages/Moderation";
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
       <Route element={<AppLayout />}>
-        <Route path="/pulse" element={<Pulse />} />
-        <Route path="/product/:slug" element={<Product />} />
-        <Route path="/agent" element={<Agent />} />
-        <Route path="/ledger" element={<Ledger />} />
-        <Route path="/plan" element={<Plan />} />
-        <Route path="/stress/:id" element={<Stress />} />
-        <Route path="/credit" element={<Credit />} />
-        <Route path="/tax" element={<Tax />} />
-        <Route path="/package" element={<Package />} />
-        <Route path="/market-admin" element={<MarketAdmin />} />
-        <Route path="/bank" element={<Bank />} />
-        <Route path="/moderation" element={<Moderation />} />
+        <Route element={<RoleGate allow={["buyer", "entrepreneur"]} />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/pulse" element={<Pulse />} />
+          <Route path="/agent" element={<Agent />} />
+          <Route path="/product/:slug" element={<Navigate to="/pulse" replace />} />
+          <Route path="/market-admin" element={<Navigate to="/pulse?tab=bozor" replace />} />
+        </Route>
+        <Route element={<RoleGate allow={["entrepreneur"]} />}>
+          <Route path="/plan" element={<Plan />} />
+          <Route path="/ledger" element={<Ledger />} />
+          <Route path="/stress/:id" element={<Navigate to="/plan" replace />} />
+          <Route path="/credit" element={<Navigate to="/plan?tab=kredit" replace />} />
+          <Route path="/bank" element={<Navigate to="/plan?tab=kredit" replace />} />
+          <Route path="/tax" element={<Navigate to="/plan?tab=soliq" replace />} />
+          <Route path="/package" element={<Navigate to="/plan?tab=paket" replace />} />
+        </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

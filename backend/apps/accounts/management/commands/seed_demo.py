@@ -196,6 +196,7 @@ class Command(BaseCommand):
 
         admin = mk_user("admin", "admin", "Admin", "urganch-shahar", True)
         dilshod = mk_user("dilshod", "entrepreneur", "Dilshod aka", "urganch-shahar")
+        mk_user("xaridor", "buyer", "Aziza opa", "urganch-shahar")
         seller = mk_user("seller", "supplier", "Hasan aka", "urganch-shahar")
         mk_user("market_admin", "market_admin", "Bozor ma'muri", "urganch-shahar")
         mk_user("banker", "bank", "Bank xodimi", "urganch-shahar")

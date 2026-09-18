@@ -4,6 +4,7 @@ from django.db import models
 
 class User(AbstractUser):
     class Role(models.TextChoices):
+        BUYER = "buyer", "Xaridor"
         ENTREPRENEUR = "entrepreneur", "Tadbirkor"
         SUPPLIER = "supplier", "Yetkazib beruvchi"
         MARKET_ADMIN = "market_admin", "Bozor ma'muri"
