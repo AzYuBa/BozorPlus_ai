@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, sans-serif;
+  font-feature-settings: "tnum" 1;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(1200px 600px at 10% -10%, #1b1440 0%, #070b14 45%);
+}
+.ticker {
+  animation: marquee 32s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.chip {
+  @apply text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded border border-white/10 text-slate-400;
+}

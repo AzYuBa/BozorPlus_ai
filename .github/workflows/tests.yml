@@ -1,0 +1,17 @@
+name: tests
+on:
+  push:
+  pull_request:
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install Django djangorestframework numpy scikit-learn rapidfuzz pytest pytest-django python-dotenv djangorestframework-simplejwt django-cors-headers django-filter drf-spectacular
+      - run: pytest -q

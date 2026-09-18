@@ -1,0 +1,1454 @@
+UMUMMILLIY AI XAKATON  •  XORAZM  •  17–20 SENTABR 2026
+BozorPuls AI
+Bozor narxidan biznes-rejagacha: tadbirkorning AI hamrohi
+TEXNIK TOPSHIRIQ (TZ) VA G‘OYALAR KONSEPSIYASI
+Parametr
+Qiymat
+Trek
+Tadbirkorlik
+Muammo egasi
+O‘zbekiston Savdo-sanoat palatasi
+Hal qilinadigan muammolar
+№19 Bozor-Analitika (B2B AI platforma)  •  №20 Kichik tadbirkorlar uchun AI moliyaviy maslahatchi
+Yondashuv
+2 muammo — 1 platforma: yagona ma’lumot yadrosi va 2 modul
+Texnologik stek
+Django 5 / DRF + React (TypeScript) + PostgreSQL/pgvector + Celery + Telegram bot (aiogram)
+Jamoa
+[Jamoa nomi] — backend, frontend, AI/ML, dizayner / biznes-analitik
+Versiya
+2.0 — 18.09.2026 (qamrov ikki muammoga toraytirildi)
+Mundarija
+1. Qisqa xulosa  —  Modullar va 5 ta “wow” lahza
+2. Xakaton konteksti va g‘alaba strategiyasi  —  Qoidalar, baholash mezonlari, reyting
+3. Muammolar tahlili: dalillar  —  №19 va №20 raqamlar bilan; nega hozir
+4. G‘oyalar banki  —  Konseptual variantlar va 18 ta kreativ funksiya
+5. Tanlangan yechim: BozorPuls konsepsiyasi  —  Qiymat taklifi, ma’lumot volani, ICP
+6. Funksional talablar  —  Ma’lumot yadrosi, M1, M2, bot, admin
+7. AI komponentlari  —  9 komponent, agent vositalari, formulalar
+8. Arxitektura va texnologik stek  —  Oqim, stek, repo, ma’lumotlar modeli, API, manbalar
+9. Nofunksional talablar  —  Xavfsizlik, maxfiylik, qonunchilik
+10. UI/UX: ekranlar  —  13 ekran va dizayn yo‘nalishi
+11. Biznes model  —  Daromad, unit-ekonomika, TAM/SAM/SOM, raqobat
+12. Xakaton davomidagi ish rejasi  —  Rollar va soatbay jadval
+13. Validatsiya rejasi  —  Bozordagi intervyular
+14. Final: pitch va demo ssenariysi  —  3 + 2 daqiqa ssenariy
+15. Hakamlar savollariga tayyorgarlik  —  10 ta savol va javob
+16. Xavflar va zaxira reja
+17. Tayyorlik mezonlari  —  CP1, CP2, Final
+A ilova. Manbalar
+B ilova. Test jumlalar
+1. Qisqa xulosa
+BozorPuls AI — kichik tadbirkorning ikki eng og‘riqli savoliga javob beradigan AI platforma: “Qayerdan arzon olaman?” va “Bu biznes foyda beradimi, kredit olaman-mi?”. Tadbirkor va sotuvchi platformaga bozor narxlarini ovoz, surat yoki matn orqali beradi; evaziga real vaqtdagi narx tahlili, eng arzon takliflar va shu narxlarga asoslangan biznes-reja, stress-test hamda kredit tayyorligi bahosini oladi.
+Asosiy kreativ g‘oya
+Ikkala muammo — bitta zanjirning ikki bo‘g‘ini: tadbirkor narxni bilmasa, xarajatini bilmaydi; xarajatini bilmasa, biznes-reja va kredit hujjatini tuza olmaydi.
+Shuning uchun biz ikki alohida dastur emas, bitta ma’lumot volani (flywheel) quramiz: har bir yuborilgan narx bozor tahlilini aniqroq qiladi, har bir aniq narx biznes-rejani ishonchli qiladi, har bir reja esa yangi foydalanuvchini olib keladi.
+Natijada raqobatchilardan farqli o‘laroq, biznes-reja o‘ylab topilgan emas, o‘lchangan narxlar ustiga quriladi.
+1.1. Platforma modullari
+Modul
+Muammo
+Kim uchun
+Asosiy natija
+M1. Narx Terminali
+№19
+Tadbirkor, ulgurji xaridor, sotuvchi, bozor ma’muriyati
+Treyding-terminal ko‘rinishidagi real narxlar, 7 kunlik prognoz va “HOZIR OL / KUT” signali, AI xarid agenti — xarid xarajati va vaqtini kamaytirish
+M2. “Xorazmiy” — AI moliyaviy hamroh
+№20
+Kichik tadbirkor, boshlovchi biznes, bank
+Real narxli biznes-reja va stress-test, ovozli daftar, kredit va soliq kalkulyatorlari, kredit tayyorligi indeksi
+Ma’lumot yadrosi + Telegram bot
+Ikkalasi
+Barcha rollar
+Ovoz / surat / matndan ma’lumot yig‘ish, normalizatsiya, sifat nazorati va anomaliya aniqlash
+Qamrov haqida
+Ushbu versiyada loyiha faqat №19 va №20 muammolariga qaratilgan. Norasmiy iqtisodiyot monitoringi (№21) TZ dan chiqarildi: 48 soatda ikki modulni chuqur va ishonchli qilish, uchtasini yuzaki qilishdan ko‘ra kuchliroq natija beradi. Agar hakamlar so‘rasa, javob tayyor: “Anonim va agregat narx ma’lumoti kelajakda hududiy iqtisodiy tahlil uchun asos bo‘ladi, lekin bu — pilotdan keyingi bosqich”.
+1.2. Hakamlarni hayratga soladigan 5 lahza
+Sotuvchi Telegramga ovozli xabar yuboradi: “un, 50 kglik qopi 450 ming” — bir necha soniyada narx terminal grafigida paydo bo‘ladi.
+Bozor narxlari birja terminalidagidek ko‘rinadi: sham grafiklar, prognoz zonasi va “HOZIR OL / KUT” signali.
+AI xarid agenti: “Urganchga 2 tonna un kerak” → yetkazib berish bilan hisoblangan yakuniy narx bo‘yicha TOP-3 taklif va tejash foizi.
+Biznes-reja o‘ylab topilgan narxlar bilan emas, terminaldagi real narxlar bilan tuziladi va stress-test qilinadi: “go‘sht narxi 15% oshsa, zarar ehtimoli 14%”.
+Kredit tayyorligi indeksi (0–100), “indeksni oshirish uchun 3 qadam” va bir tugmada bankka yuboriladigan kredit paketi.
+Izoh: demo raqamlari misol uchun berilgan va demo ma’lumotlarga asoslanadi; real yig‘ilgan ma’lumotlar alohida ko‘rsatiladi.
+2. Xakaton konteksti va g‘alaba strategiyasi
+2.1. Asosiy qoidalar va bizga ta’siri
+Qoida (tashkilotchilar taqdimotidan)
+Bizning javobimiz
+AI komponenti majburiy
+AI mahsulotning markazida: 9 ta AI komponent (7-bo‘lim)
+Loyiha 2 ish kunida yaratiladi; oldindan tayyor loyihalar qabul qilinmaydi, ishlab chiqish jarayoni tekshiriladi
+GitHub repo xakaton davomida ochiladi; har 1–2 soatda mazmunli commit; commit tarixi jarayonning isboti bo‘ladi
+Ochiq kodli modellardan foydalanish mumkin
+Whisper (STT), bge-m3/e5 (embedding), Prophet/statsforecast, scikit-learn; LLM LiteLLM orqali almashtiriladi
+Jamoa 3–5 kishi, hamma binoda bo‘lishi shart (har 2 soatda tekshiriladi)
+Tanaffuslar navbat bilan; uyqu jadvali 12-bo‘limda
+Kreativlik — eng muhim qismlardan biri
+Ovozli va suratli narx kiritish, treyding-terminal UX, real narxli stress-test, formallashuv kalkulyatori
+CP1: 18-sentabr 14:00–18:00. CP2: 19-sentabr 14:00–18:00 (taqdimot + GitHub havolasi)
+Taqdimot har checkpoint boshlanguncha tayyor bo‘ladi; muddatdan keyin hech narsa qabul qilinmaydi
+19-sentabr 19:00 — Top-15 (har trekdan 5 ta). Final 20-sentabr: 3 daq taqdimot + 2 daq demo + 2 daq savol-javob
+Demo ssenariysi va savol-javoblar 14–15-bo‘limlarda; zaxira demo video
+Har trekdan 1 g‘olib — Toshkent finaliga (dekabr 2026), investitsiya imkoniyati
+Yo‘l xaritasi Xorazm pilotidan respublikaga kengayishni ko‘rsatadi
+2.2. Baholash mezonlari va bizning javobimiz
+Har bir mentor 5 ta mezonni 1–10 ball bilan baholaydi. Checkpoint bali = (texnik + biznes + soha) ÷ 3. Yakuniy reyting = 0,4 × CP1 + 0,6 × CP2.
+Mentor
+Mezon
+BozorPuls javobi va isbot
+Texnik
+Texnik amalga oshirish
+To‘liq ishlaydigan oqim: Telegram ovoz → narx bazasi → terminal → xarid agenti → biznes-reja → kredit paketi
+Texnik
+Kod tayyorligi
+README, docker-compose, seed_demo, Swagger, kalkulyatorlar uchun unit testlar, toza commit tarixi
+Texnik
+Yechim innovatsionligi
+Ovoz va surat orqali narx kiritish, real narxli Monte-Karlo stress-test, tushuntiriladigan kredit skoringi
+Texnik
+Jamoaning bilim darajasi
+Har a’zo o‘z modulini 1 daqiqada tushuntira oladi (15-bo‘lim)
+Texnik
+Texnologiyalar to‘plami
+Django/DRF, React, PostgreSQL + pgvector, Celery, Whisper, LLM agent + tool-calling, Prophet, scikit-learn
+Biznes
+G‘oya va muammo dolzarbligi
+Rasmiy raqamlar (3-bo‘lim) va Urganch bozoridagi intervyular
+Biznes
+Biznes model va monetizatsiya
+Freemium obuna + bank lidlari + yetkazib beruvchilar + bozor ma’muriyati SaaS (11-bo‘lim)
+Biznes
+Raqobatdagi ustunlik
+Mahalliy crowd narx bazasi, o‘zbekcha ovoz, Palata “Biznes hamroh” tarqatish kanali
+Biznes
+Moliyaviy barqarorlik
+Unit-ekonomika: LTV/CAC ≈ 5; asosiy daromad B2B (bank va yetkazib beruvchi)
+Biznes
+O‘sish imkoniyati
+Xorazm → 14 hudud → Markaziy Osiyo; ochiq API
+Soha
+Muammoning dolzarbligi
+Kichik korxonalarning faqat 10% ida bank krediti bor; MSME moliyalash tanqisligi $6 mlrd
+Soha
+Sohani chuqur tushunish
+2026 soliq rejimlari, davlat kredit dasturlari, “foydalanuvchi ≠ qaror qiluvchi ≠ to‘lovchi” tahlili
+Soha
+Amaliy qo‘llanish
+Biznes hamroh (Urganch) va Urganch markaziy dehqon bozori bilan pilot taklifi
+Soha
+Qonunchilikka muvofiqlik
+Shaxsiy ma’lumotlar qonuni, AI qonuni (muhim qarorlar inson nazoratida), soliq javoblarida huquqiy manba
+Soha
+Ta’sir ko‘lami
+1,21 mln faol kichik biznes subyekti; Xorazmda zichlik respublikada eng yuqori
+2.3. Reyting strategiyasi
+CP2 og‘irligi 60%. CP1 da ishlaydigan skelet va bitta “wow” (ovozli narx → terminal) ko‘rsatiladi. CP2 da mentorlar izohlari asosidagi o‘sish ko‘rsatiladi.
+Mentor izohlari jurnali yuritiladi. CP2 da alohida slayd: “Siz aytgan X ni qo‘shdik → natija Y”.
+Ballar teng bo‘lsa: avval CP2 bali, keyin soha mentori, keyin texnik mentor bali hal qiladi. Shuning uchun soha mentoriga qonunchilik va amaliy qo‘llanish alohida ko‘rsatiladi.
+Ro‘yxatdan o‘tishda bitta muammo raqami talab qilinsa — №19 ni asosiy deb ko‘rsating (demo eng vizual va volaning boshlanishi), №20 ni uning tabiiy davomi sifatida taqdim eting.
+Taqdimotdagi “Ustuvor yo‘nalish” slaydida qo‘shimcha ballar ko‘rsatilgan, lekin ustuvor muammolar ro‘yxati berilmagan — koordinatordan so‘rang.
+3. Muammolar tahlili: dalillar
+Quyidagi raqamlar 2025–2026 yillardagi ochiq manbalardan olingan (to‘liq havolalar A ilovada). Pitchda 3–4 ta eng kuchli raqamdan foydalaning va manbani kichik harf bilan ko‘rsating.
+3.1. №19 — Bozor narxlari bo‘yicha yagona tahliliy baza yo‘q
+Dalil
+Manba
+Statistika qo‘mitasi 2026-yildan oyiga ~2 mln narx kuzatuvini yig‘adi, ammo mikro-darajadagi ma’lumot ochiq emas; 30 ta ijtimoiy ahamiyatli tovar faqat haftalik e’lon qilinadi
+Gazeta.uz, 04.02.2026
+UzEx faqat birja tovarlari (metall, yoqilg‘i, paxta, o‘g‘it, shakar, un, don) bo‘yicha haftalik kotirovka beradi — dehqon bozorlarining chakana va ulgurji narxlari qamrab olinmagan
+uzex.uz
+Davlat xaridlarida 1-mart 2026 dan AI “o‘rtacha bozor narxi” moduli ishlaydi: davlat AI narx tahliliga ishonadi, lekin tadbirkor uchun bunday vosita yo‘q
+Spot.uz, 29.12.2025
+Kichik biznes — YaIMning 51,5% (2025, 9 oy); 1,21 mln faol subyekt (01.10.2025). Xorazmda zichlik eng yuqori: 1 000 aholiga 43,5 — ya’ni maqsadli auditoriya shu yerda
+UzDaily / Statistika qo‘mitasi
+Dehqon bozori narxlarini taqqoslaydigan maxsus ilova yoki bot tadqiqotda topilmadi (to‘liq kafolat emas — pitchdan oldin qayta tekshiring)
+Jamoa tadqiqoti
+3.2. №20 — KOBning moliyaviy savodxonligi va kreditga kirish
+Dalil
+Manba
+Faqat 10% kichik va 16% o‘rta korxonada bank krediti bor; MSME moliyalash tanqisligi $6 mlrd ($13 mlrd talabdan)
+Jahon banki, 15.12.2025
+Kattalarning atigi 12% i rasmiy moliya tashkilotidan qarz oladi
+Global Findex 2025
+Kreditga asosiy to‘siqlar: moliyaviy hujjat va prognozlarning yo‘qligi, garov talabi
+EBRD / Euronews, 01.07.2026
+Moliyaviy savodxonlik: kattalarning 21% i (S&P Global FinLit, 2014); faqat 25% oddiy foizni to‘g‘ri hisoblaydi (WB/IFC, 2020)
+S&P Global; Jahon banki / IFC
+MB asosiy stavkasi 14%; so‘mdagi biznes kreditlarining o‘rtacha foizi 21,8% (iyun 2026) — xato hisob-kitob qimmatga tushadi
+Gazeta.uz, 30.07.2026 va 06.08.2026
+2026 soliq o‘zgarishlari: ZRU-1108; 01.06.2026 dan QQS chegarasi ~4,94 mlrd so‘m, savdo va xizmat uchun ixtiyoriy 6% rejim — tanlov murakkablashdi
+Spot.uz; Gazeta.uz, 01.06.2026
+Davlat dasturlari faol: ayollar tadbirkorligi uchun 2 trln so‘m (2026–27), kooperatsiya uchun garovsiz kreditlar (11.09.2026) — lekin tadbirkor ularni bilmaydi
+Spot.uz, 04.12.2025 va 12.09.2026
+Muhim
+Ba’zi raqamlar manbalar orasida farq qiladi. Slayddagi har bir raqamni A ilovadagi havola orqali qayta tekshiring va manbani slaydda ko‘rsating — hakamlar buni qadrlaydi.
+3.3. Nega aynan hozir?
+Raqamli iz ko‘paydi: 1-apreldan 2026 ayrim to‘lovlar faqat naqd pulsiz; 1-iyuldan barcha savdo nuqtalarida yagona QR-kod; 75,7 mln bank kartasi (01.08.2026). Savdo raqamlashmoqda — tahlil vositasi esa yo‘q.
+Tayyor tarqatish kanali: Palataning “Biznes hamroh” loyihasi (01.03.2026) — 14 ta hududiy markaz (Urganchda ham), 1 000+ xizmat, 24/7 call-markaz. Biz ularning maslahatchilari uchun raqamli vosita bo‘lamiz.
+Soliq qoidalari tez o‘zgarmoqda (2026 yilda ikki marta) — manbali va doim yangilanadigan maslahatchiga talab yuqori.
+Davlat AI narx tahliliga ishondi: davlat xaridlarida AI “o‘rtacha bozor narxi” moduli 2026-yil martdan ishlaydi. Endi xuddi shu imkoniyat tadbirkorga kerak.
+Qonunchilik tayyor: AI to‘g‘risidagi qonun (2026) mas’uliyatli AI talablarini belgilaydi — biz inson nazoratini dizayn darajasida qo‘yamiz.
+3.4. Hozirgi alternativalar (asosiy raqib — odat)
+Narx: bozorni aylanib chiqish, qo‘shni yoki tanishdan so‘rash, Telegram guruhlar, OLX e’lonlari.
+Moliya: qog‘oz daftar, Excel, tanish buxgalter, bank xodimining og‘zaki maslahati.
+Umumiy AI (ChatGPT va boshqalar): mahalliy real narxlarni va 2026 soliq qoidalarini bilmaydi, raqamlarni “o‘ylab topishi” mumkin.
+4. G‘oyalar banki
+4.1. Konseptual variantlar (kirish nuqtasi)
+Variant
+G‘oya
+Kuchli tomoni
+Zaif tomoni
+Qaror
+A. BozorPuls platformasi
+Narx terminali + AI moliyaviy hamroh, yagona ma’lumot yadrosi ustida
+Ikki muammoni bitta zanjirga bog‘laydi; B2C ma’lumot beradi, B2B (bank, yetkazib beruvchi) pul to‘laydi
+Ikki modul — vaqt kam; MVP qat’iy cheklanishi kerak
+✅ TANLANDI
+B. Ovozli daftar
+Bozor sotuvchisi uchun Telegram ovozli buxgalteriya; narx tahlili qo‘shimcha mahsulot
+Juda sodda, ommaviy, sotuvchiga tushunarli
+№19 zaif ko‘rinadi; AI komponenti kam
+M2 ichiga funksiya sifatida kiritildi
+C. Bozor birjasi (RFQ)
+Ulgurji savdo uchun teskari tender marketplace
+Tranzaksion daromad aniq
+Sotuvchi va xaridorni bir vaqtda jalb qilish qiyin; 2 kunda to‘lmaydi
+M1 ichida P1 funksiya
+4.2. Kreativ funksiyalar ro‘yxati
+P0 — MVP va demo uchun majburiy. P1 — CP2 dan keyin vaqt qolsa. P2 — yo‘l xaritasi (pitchda “keyingi qadam” sifatida).
+#
+Funksiya
+Modul
+Nima uchun kreativ
+Ust.
+1
+Ovoz va surat orqali narx kiritish (o‘zbekcha)
+M1
+Sotuvchi yozmaydi — gapiradi; AI narx yorlig‘ini o‘qiydi
+P0
+2
+Treyding-terminal: sham grafik, narx tikeri, talab-taklif stakani
+M1
+Birja UX’ini dehqon bozoriga olib kirish — kuchli vizual effekt
+P0
+3
+“HOZIR OL / KUT” signali + 7 kunlik prognoz (ishonch oralig‘i bilan)
+M1
+Grafik emas, tayyor qaror
+P0
+4
+AI xarid agenti: “Urganchga 2 tonna un kerak” → yetkazish bilan yakuniy narx bo‘yicha TOP-3
+M1
+Chat orqali xarid; logistika hisobga olinadi
+P0
+5
+Narx manipulyatsiyasi va soxta narx detektori
+M1
+Crowd ma’lumot sifatini kafolatlaydi — ishonch masalasi
+P0
+6
+Arbitraj xaritasi: bozorlar orasidagi narx farqi minus yo‘l xarajati
+M1
+Qayerdan olib, qayerda sotish foydali
+P1
+7
+Teskari tender (RFQ) va narx ogohlantirishlari
+M1
+Talab va taklifni bir joyda birlashtiradi
+P1
+8
+Bozor ma’muriyati paneli: spekulyatsiya signali, ijtimoiy tovarlar monitoringi
+M1
+Muammo shartida aynan bozor ma’muriyati ham ko‘rsatilgan
+P1
+9
+Ovozli daftar: “bugun 3 qop guruch qopi 450 mingdan sotdim” → kirim yozuvi
+M2
+Buxgalteriyasiz buxgalteriya
+P0
+10
+Real narxlarga asoslangan biznes-reja (xom ashyo narxlari M1 dan)
+M2
+Umumiy AI narxni taxmin qiladi — biz o‘lchaymiz
+P0
+11
+Stress-test (Monte-Karlo): narx volatilligi M1 dagi tarixdan olinadi
+M2
+Bank uchun risk tahlili, tadbirkor uchun ogohlantirish
+P0
+12
+Kredit kalkulyatori + davlat dasturlarini avtomatik moslashtirish
+M2
+Qaysi dastur mosligini tadbirkor o‘zi bilmaydi
+P0
+13
+Soliq rejimlarini taqqoslash (qoidalar bazada, huquqiy havola bilan)
+M2
+“Qaysi rejimda qancha to‘layman?” — manbali javob
+P0
+14
+Kredit tayyorligi indeksi (0–100) + “3 qadam” tavsiya
+M2
+Tushuntiriladigan skoring: nega shunday ball qo‘yilgani ko‘rinadi
+P0
+15
+Formallashuv kalkulyatori: norasmiy holat vs YaTT / o‘zini o‘zi band
+M2
+Rasmiylashish foydasini raqamda ko‘rsatadi (soliq, kredit, keshbek)
+P0
+16
+Bir tugmada bankka “kredit paketi” (reja + hisobot + indeks, PDF)
+M2
+Bank uchun tayyor lid — asosiy daromad oqimi
+P1
+17
+Xatolarga qarab 2 daqiqalik mikro-darslar va ball
+M2
+Savodxonlikni amalda oshirish
+P1
+18
+Telegram Mini App, TTS ovozli javob, kirill va rus tili
+Ikkalasi
+Keng auditoriya
+P2
+5. Tanlangan yechim: BozorPuls konsepsiyasi
+5.1. Qiymat taklifi
+Formula (workshop): “Biz [mijoz]ga [natija]ga [yechim] orqali erishishga yordam beramiz. Hozirgi alternativadan farqimiz — [farq].”
+Segment
+Qiymat taklifi
+Tadbirkor
+Xorazmdagi kichik savdo va umumiy ovqatlanish tadbirkorlariga xarid xarajatini kamaytirishga va kredit olishga tayyorlanishga real bozor narxlari va o‘zbek tilidagi AI hamroh orqali yordam beramiz. Farqimiz: bozorni aylanib chiqish yoki tanishdan so‘rash o‘rniga bir daqiqada, ovoz bilan va har bir raqamning manbasi bilan.
+Yetkazib beruvchi
+Ulgurji sotuvchi va fermerlarga yangi xaridorlar topishga yordam beramiz. Farqimiz: e’lon berish o‘rniga — aniq so‘rov qo‘ygan xaridorga to‘g‘ridan-to‘g‘ri chiqish.
+Bank / MMT
+Banklarga hujjati tayyor, risklari tahlil qilingan kichik biznes lidlarini beramiz. Farqimiz: garov va qog‘oz hisobot o‘rniga alternativ ma’lumot — real savdo daftari va bozor volatilligi asosidagi stress-test.
+Bozor ma’muriyati
+Bozor ma’muriyatiga o‘z bozoridagi narx holatini va spekulyatsiya signallarini real vaqtda ko‘rsatamiz. Farqimiz: qo‘lda yozib yuriladigan jadval o‘rniga avtomatik monitoring va hisobot.
+5.2. Ma’lumot volani (flywheel)
+Tadbirkor yoki sotuvchi Telegram botga narxni ovoz, surat yoki matn bilan yuboradi yoxud ovozli daftar yuritadi.
+AI ma’lumotni tuzilmaga soladi (mahsulot, narx, birlik, bozor, vaqt) va sifat nazoratidan o‘tkazadi.
+Evaziga foydalanuvchi bepul oladi: eng arzon takliflar, narx signali, “Narx ovchisi” reytingidagi ballar.
+Daftar va narxlar asosida biznes-reja, stress-test va kredit tayyorligi indeksi hisoblanadi.
+Bank tayyor kredit paketi uchun to‘laydi, yetkazib beruvchi xaridorga chiqish uchun to‘laydi — tadbirkor uchun asosiy funksiyalar bepul qoladi.
+Bozor ma’muriyatlari va Palataning “Biznes hamroh” markazlari tarqatish kanalini beradi → ko‘proq foydalanuvchi → narx bazasi boyiydi → 1-qadamga qaytiladi.
+5.3. Foydalanuvchi ≠ qaror qiluvchi ≠ to‘lovchi
+Segment
+Foydalanuvchi
+Qaror qiluvchi
+To‘lovchi
+Nima uchun to‘laydi
+Tadbirkor
+Do‘kon, kafe, ulgurji xaridor
+Egasi
+Egasi (Pro obuna)
+Xarid xarajati va vaqtni tejash, kreditga tayyorlik
+Yetkazib beruvchi
+Ulgurji sotuvchi, fermer
+Egasi
+Egasi (obuna, komissiya)
+Yangi xaridorlar, so‘rovlarga birinchi chiqish
+Bank / MMT
+Kredit xodimi
+Kichik biznes kreditlash bo‘limi
+Bank (lid yoki API uchun)
+Tayyor, skoringdan o‘tgan lidlar, kam risk
+Bozor ma’muriyati
+Ma’mur
+Direktor
+Bozor (SaaS)
+Narx nazorati, spekulyatsiya signallari, hisobot
+5.4. Ideal mijoz (ICP) va birinchi 10 mijoz
+ICP — 1-bosqich
+Urganch va Xivadagi, xom ashyoni haftasiga kamida 2 marta dehqon bozori yoki ulgurji sotuvchidan oladigan kichik umumiy ovqatlanish (kafe, oshxona, somsaxona) va oziq-ovqat do‘konlari egalari. Kredit olishni rejalashtirishgan, lekin moliyaviy hisobotlari yo‘q.
+Urganchdagi Biznes hamroh markaziga keluvchi tadbirkorlar (maslahatchilar vositasi sifatida).
+Urganch markaziy dehqon bozori ma’muriyati bilan 20 sotuvchi va 20 xaridordan iborat pilot.
+Yoshlar texnoparki rezidentlari va xakaton mentorlari tarmog‘i.
+Xorazmdagi 5 ta tadbirkorlar Telegram guruhining adminlari bilan hamkorlik.
+6. Funksional talablar
+Har bir talabning ID, tavsif, qabul mezoni va ustuvorligi berilgan. Ustuvorlik: P0 — MVP, P1 — vaqt qolsa, P2 — kelajak.
+6.1. Ma’lumot yadrosi (DC)
+ID
+Talab
+Qabul mezoni
+Ust.
+DC-01
+Mahsulot katalogi: kategoriya → mahsulot → nav; birliklar (kg, qop, litr, dona, tonna) va konvertatsiya; sinonimlar (lotin / kirill / rus: pomidor / помидор / tomat)
+Kamida 60 mahsulot, 6 kategoriya; “помидор” so‘rovi “Pomidor”ga bog‘lanadi
+P0
+DC-02
+Hududlar va bozorlar: viloyat → tuman/shahar → bozor (koordinatalar bilan)
+Xorazmning barcha tuman va shaharlari; kamida 6 ta bozor yoki savdo nuqtasi
+P0
+DC-03
+Narx kuzatuvini qabul qilish: manba turi (crowd, scrape, stat, uzex, partner, demo), ishonch bali, media, geolokatsiya
+Har yozuvda source_type va confidence majburiy; yozish ≤ 300 ms (AI’siz)
+P0
+DC-04
+Normalizatsiya: matndan mahsulot, narx, birlik, miqdor va bozorni ajratish; narxni bazaviy birlikka (1 kg, 1 dona) keltirish
+“50 kglik qop un 450 ming” → Un, 9 000 so‘m/kg
+P0
+DC-05
+Sifat nazorati: chetlanish (MAD z-skor > 3,5), dublikat, foydalanuvchi reputatsiyasi; shubhali yozuv “tekshiruvda” statusiga o‘tadi
+Sun’iy 10 barobar narx indeksga kirmaydi
+P0
+DC-06
+Skreyperlar (Celery beat): OLX.uz, Uzum Market, UzEx kotirovkalari, stat.uz nashrlari — robots.txt va foydalanish shartlariga rioya
+Kamida 1 ta real manbadan avtomatik yig‘ish ishlaydi
+P1
+DC-07
+Demo ma’lumot generatori: 90 kunlik realistik narx qatorlari (mavsumiylik, shovqin), 200 biznes; “DEMO” belgisi bilan
+seed_demo buyrug‘i 1 daqiqada bajariladi
+P0
+DC-08
+Gamifikatsiya: ball, “Narx ovchisi” reytingi, tasdiqlangan hissa uchun bonus (Pro kunlari)
+Ball faqat sifat nazoratidan o‘tgan yozuvga beriladi
+P1
+6.2. M1 — Narx Terminali (№19)
+ID
+Talab
+Qabul mezoni
+Ust.
+M1-01
+“Bozor pulsi” bosh ekrani: narx tikeri (o‘zgarish %, yashil/qizil), eng ko‘p o‘sgan va tushgan mahsulotlar, ijtimoiy ahamiyatli tovarlar indeksi
+Yangilanish WebSocket/SSE yoki 10 s polling orqali
+P0
+M1-02
+Mahsulot sahifasi: kunlik sham grafik (OHLC), bozorlar kesimidagi narx jadvali, kuzatuvlar soni
+Lightweight Charts; 7/30/90 kun filtri
+P0
+M1-03
+7 kunlik prognoz + 80% ishonch oralig‘i; “HOZIR OL / KUT / NEYTRAL” signali va bir jumlali izoh
+Signal qoidasi 7.3-bo‘limda; backtest MAPE ekranda ko‘rsatiladi
+P0
+M1-04
+AI xarid agenti: tabiiy tildagi so‘rov → mahsulot, miqdor, manzil → yakuniy narx (narx × miqdor + yetkazish) bo‘yicha TOP-3 → yetkazib beruvchiga tayyor xabar matni
+“Urganchga 2 tonna un kerak” → 3 taklif, yakuniy summa, tejash %
+P0
+M1-05
+Taqqoslash jadvali: bir mahsulot bo‘yicha barcha bozorlar, farq foizda va so‘mda, oxirgi yangilanish vaqti
+Kamida 5 bozor bo‘yicha
+P0
+M1-06
+Talab-taklif stakani: faol takliflar va so‘rovlar narx darajalari bo‘yicha
+Demo ma’lumotda ishlaydi
+P1
+M1-07
+Arbitraj xaritasi (Leaflet): bozorlar, narx farqi va masofaga ko‘ra foydali yo‘nalishlar
+Kamida 3 ta mahsulot uchun
+P1
+M1-08
+Narx ogohlantirishlari: “Guruch 12 000 dan tushsa xabar ber” → Telegram xabari
+Shart bajarilganda 1 daqiqa ichida xabar
+P1
+M1-09
+Teskari tender (RFQ): xaridor so‘rov qo‘yadi, yetkazib beruvchilar taklif beradi, AI eng yaxshisini izohlab tavsiya qiladi
+To‘liq sikl demo ma’lumotda
+P1
+M1-10
+Bozor ma’muriyati paneli: viloyat o‘rtachasidan farq, spekulyatsiya signallari, ijtimoiy tovarlar monitoringi, haftalik PDF hisobot
+market_admin roli uchun; hisobot ≤ 30 s
+P1
+6.3. M2 — “Xorazmiy” AI moliyaviy hamroh (№20)
+ID
+Talab
+Qabul mezoni
+Ust.
+M2-01
+AI chat (o‘zbek lotin/kirill, rus), matn va ovoz; tool-calling agent; har bir raqam tool natijasidan olinadi va manbasi ko‘rsatiladi
+Raqamli javobda “manba: kalkulyator / narx bazasi / lex.uz” belgisi bor
+P0
+M2-02
+Ovozli daftar: Telegram ovoz → kirim/chiqim yozuvi (summa, kategoriya, mahsulot, miqdor) → tasdiqlash tugmasi → kunlik va oylik foyda-zarar, pul oqimi
+10 ta test ovozdan kamida 8 tasi to‘g‘ri tuzilmaga aylanadi
+P0
+M2-03
+Biznes-reja ustasi: 5 qadamli savol-javob (soha, joy, investitsiya, xodimlar, sotuv) → xom ashyo narxlari M1 dan → daromad/xarajat, o‘zini oqlash muddati, NPV, zararsizlik nuqtasi → PDF/DOCX
+Rejada har bir xom ashyo narxi yonida “BozorPuls narxi, sana” yozuvi bor
+P0
+M2-04
+Stress-test (Monte-Karlo, 1 000 ssenariy): xom ashyo narxlari M1 tarixiy volatilligi bilan, sotuv hajmi ±15%; natija: zarar ehtimoli, P10/P50/P90 foyda, eng xavfli omil
+Foyda taqsimoti grafigi; hisoblash ≤ 2 s
+P0
+M2-05
+Kredit kalkulyatori: annuitet va differensial, imtiyozli davr, to‘lov jadvali, samarali stavka; davlat kompensatsiyasi bilan va kompensatsiyasiz taqqoslash
+Natija Excel PMT formulasi bilan mos (unit test)
+P0
+M2-06
+Dasturlarni moslashtirish: LoanProgram jadvali (bank, dastur, stavka, maksimal summa, talablar, kafillik %) bo‘yicha profilga mos dasturlar va sababi
+Demo bazada kamida 5 ta dastur, har birida manba havolasi
+P0
+M2-07
+Soliq rejimlarini taqqoslash: yillik aylanma, xarajat, soha → rejimlar bo‘yicha soliq yuklamasi; qoidalar kodda emas, TaxRule jadvalida (stavka, chegara, amal qilish sanasi, huquqiy asos)
+Har natijada lex.uz havolasi; qoidani admin paneldan o‘zgartirish mumkin
+P0
+M2-08
+Kredit tayyorligi indeksi (KTI, 0–100): 6 ta omil + “indeksni oshirish uchun 3 qadam”
+Har omilning hissasi ko‘rsatiladi (tushuntiriladigan)
+P0
+M2-09
+Formallashuv kalkulyatori: norasmiy holat va YaTT / o‘zini o‘zi band maqomi — soliq, kreditga kirish, keshbek, xavflar; ro‘yxatdan o‘tish yo‘riqnomasi
+Kamida 2 ta maqom taqqoslanadi, manbalar bilan
+P0
+M2-10
+Kredit paketi (PDF) va tadbirkor roziligi bilan “bankka yuborish” (demo: bank paneliga tushadi)
+Rozilik belgilanmasa yuborilmaydi
+P1
+M2-11
+Xatolarga qarab 2 daqiqalik mikro-darslar va 3 savollik test
+Kamida 5 ta dars
+P1
+M2-12
+RAG bilim bazasi: Soliq kodeksi, dastur qarorlari, Palata xizmatlari — pgvector, iqtibos bilan
+Javobda hujjat nomi va modda/band raqami
+P1
+6.4. Telegram bot va admin panel
+ID
+Talab
+Qabul mezoni
+Ust.
+TG-01
+/start: rol (sotuvchi, tadbirkor), til, tuman tanlash; ommaviy oferta va rozilik
+Ro‘yxatdan o‘tish ≤ 4 qadam
+P0
+TG-02
+Narx yuborish: matn / ovoz / surat → AI tuzilma → “To‘g‘rimi?” tugmalari → ball
+Ovozdan natijagacha ≤ 10 s
+P0
+TG-03
+“Eng arzonini top” — xarid agenti (M1-04)
+TOP-3 taklif kartalari
+P0
+TG-04
+Ovozli daftar va /hisobot (bugun, hafta, oy)
+Hisobot rasm yoki PDF ko‘rinishida
+P0
+TG-05
+Narx ogohlantirishlari
+M1-08 bilan bir xil
+P1
+TG-06
+Telegram Mini App orqali terminal
+Mobil ko‘rinish
+P2
+AD-01
+Admin: Django Admin + moderatsiya navbati (shubhali narxlar), TaxRule va LoanProgram tahriri, foydalanuvchilar, audit log
+Moderator narxni 1 bosishda tasdiqlaydi yoki rad etadi
+P0
+7. AI komponentlari
+7.1. Komponentlar jadvali
+#
+Komponent
+Vazifa
+Model / usul (MVP)
+Sifat mezoni
+AI-1
+Nutqni matnga (STT)
+Ovozli narx va ovozli daftar
+Whisper large-v3 / turbo (faster-whisper; o‘zbek tilini qo‘llaydi) yoki mahalliy o‘zbekcha STT API; zaxira — matn
+20 ta bozor ovozida qo‘lda WER
+AI-2
+Axborot ajratish
+Matn → {mahsulot, narx, birlik, miqdor, bozor}
+LLM structured output (JSON schema) + son qoidalari (“1 mln 350 ming”, “12 ming”, “yarim”)
+50 test jumlada maydon aniqligi ≥ 85%
+AI-3
+Rasm tahlili
+Narx yorlig‘i, chek surati
+Multimodal LLM (vision) → JSON; muqobil: PaddleOCR + LLM
+20 rasmda ≥ 80%
+AI-4
+Mahsulot normalizatsiyasi
+Sinonim, kirill/lotin, xato yozuv
+Transliteratsiya + bge-m3 yoki multilingual-e5 embedding + pgvector kNN; ishonch < 0,75 → moderatsiya
+Top-1 ≥ 90%
+AI-5
+Narx prognozi
+7 kunlik prognoz va signal
+statsforecast (AutoETS) yoki Prophet, mahsulot × bozor bo‘yicha, haftalik mavsumiylik
+Oxirgi 14 kunda backtest MAPE
+AI-6
+Anomaliya aniqlash
+Soxta narx, manipulyatsiya, spekulyatsiya signali
+Robust z-skor (MAD) + IsolationForest + foydalanuvchi reputatsiyasi
+Sun’iy qo‘shilgan xatolarda recall ≥ 90%
+AI-7
+LLM agent “Xorazmiy”
+Chat, reja tuzish, tushuntirish, xarid agenti
+LLM + tool-calling; LiteLLM orqali provayder almashtiriladi (tijorat API yoki ochiq model, masalan Qwen / Llama)
+20 ssenariy; raqamlar faqat tool’dan
+AI-8
+RAG
+Soliq, dastur va qonunchilik savollari
+pgvector + bge-m3; ~500 tokenli bo‘laklar; iqtibos bilan
+15 savolda to‘g‘ri manba ≥ 80%
+AI-9
+Hisobot generatori
+Biznes-reja matni va bozor ma’muriyati uchun haftalik narx hisoboti
+LLM + shablon: kontekstga faqat hisoblangan raqamlar beriladi → HTML → PDF
+Har raqam bazadan; inson tekshiruvi
+Ovozli kiritish bo‘yicha eslatma
+Shovqinli bozor muhitida va shevalarda o‘zbekcha STT sifati pasayishi mumkin. Shuning uchun bot har bir ovozli yozuvdan keyin tuzilgan natijani ko‘rsatadi va “To‘g‘rimi?” deb tasdiqlash so‘raydi. Bu ham sifat nazorati, ham inson nazorati vazifasini bajaradi.
+7.2. “Xorazmiy” agentining vositalari (tools)
+Tool
+Vazifa
+Kim chaqira oladi
+search_offers(product, qty, unit, district)
+Yakuniy narx bo‘yicha TOP takliflar
+Tadbirkor
+get_price_stats(product, market?, days)
+OHLC, o‘rtacha, volatillik, bozorlar taqqoslovi
+Hamma
+forecast_price(product, market, horizon=7)
+Prognoz + signal
+Hamma
+calc_loan(amount, rate, months, type, grace, subsidy)
+To‘lov jadvali, samarali stavka
+Tadbirkor, bank
+match_programs(profile)
+Mos davlat dasturlari va sababi
+Tadbirkor
+calc_tax(turnover, expenses, sector, regimes[])
+Rejimlar bo‘yicha soliq yuklamasi
+Tadbirkor
+compare_status(turnover, sector)
+Norasmiy / o‘zini o‘zi band / YaTT taqqoslovi
+Tadbirkor
+build_business_plan(inputs) / stress_test(plan_id, n)
+Reja va risk tahlili
+Tadbirkor, bank
+credit_readiness(business_id)
+KTI va omillar
+Tadbirkor, bank (rozilik bilan)
+ledger_add(entry) / ledger_report(period)
+Daftar yozuvi va hisobot
+Tadbirkor
+search_knowledge(query)
+RAG iqtibos
+Hamma
+market_report(market_id, period)
+Bozor bo‘yicha narx hisoboti va anomaliyalar
+Faqat market_admin
+Himoya choralari
+LLM raqamlarni o‘zi hisoblamaydi: faqat tool natijasini keltiradi, javobda manba belgisi bo‘ladi.
+Moliyaviy va soliq javoblarida ogohlantirish: “Ma’lumot uchun; yakuniy qarordan oldin bank yoki soliq maslahatchisi bilan tekshiring”.
+Prompt injection’dan himoya: foydalanuvchi matni tizim ko‘rsatmalaridan ajratiladi; tool ruxsatlari rolga bog‘langan (tadbirkor market_report’ni chaqira olmaydi).
+KTI — tavsiya xarakterida. Kredit qarorini bank xodimi qabul qiladi (AI qonuniga ko‘ra inson nazorati).
+Har bir LLM chaqiruvi loglanadi (model, token, kechikish, tool, xarajat) — sifat va xarajat nazorati uchun.
+7.3. Formulalar va metodologiya
+Narx indeksi va OHLC
+P(p, m, d) = vaznli mediana { kuzatuvlar: mahsulot p, bozor m, kun d }
+vazn w = confidence × source_weight
+source_weight: stat/uzex = 1.0, partner = 0.9, scrape = 0.7,
+crowd = 0.5 × reputation
+OHLC: open = kunning birinchi, close = oxirgi,
+high = P95, low = P5  (chetlanishlar ta’sirini kamaytirish uchun)
+“HOZIR OL / KUT” signali
+Δ = (ŷ[t+7] − P[t]) / P[t]
+agar Δ ≥ +5% va lo[t+7] > P[t]  → "HOZIR OL" (narx oshishi kutilmoqda)
+agar Δ ≤ −5% va hi[t+7] < P[t]  → "KUT"      (narx tushishi kutilmoqda)
+aks holda                        → "NEYTRAL"
+(5% chegara konfiguratsiyada)
+Yakuniy narx (xarid agenti)
+Jami = narx_birlik × miqdor + yetkazish
+yetkazish = bazaviy_tarif + masofa_km × tarif_km_tonna × tonna
+Tejash % = (o‘rtacha_jami − eng_arzon_jami) / o‘rtacha_jami
+Anomaliya (soxta narx va spekulyatsiya)
+z = 0.6745 × (x − mediana) / MAD;   |z| > 3.5  → shubhali yozuv
+Qo‘shimcha: IsolationForest (narx, vaqt, foydalanuvchi reputatsiyasi,
+bozor o‘rtachasidan farq) → moderatsiya navbati
+Spekulyatsiya signali: bitta bozorda 24 soatda +15% va viloyat
+o‘rtachasidan +20% farq → bozor ma’muriyatiga xabar
+Kredit kalkulyatori
+Annuitet: A = S × r × (1 + r)^n / ((1 + r)^n − 1),   r = yillik_stavka / 12
+Differensial: to‘lov_k = S / n + (S − S × (k − 1) / n) × r
+Kompensatsiya: samarali_stavka = nominal − kompensatsiya
+(kompensatsiya qoidasi LoanProgram.subsidy_rule dan olinadi, kodda qotirilmaydi)
+Stress-test (Monte-Karlo)
+i = 1..N (N = 1000):
+narx_j,i  = P0_j × exp(σ_j × √t × Z − σ_j² × t / 2),  Z ~ N(0, 1)
+(σ_j — mahsulot j ning M1 dagi tarixiy volatilligi)
+sotuv_i   ~ N(μ, 0.15 × μ)
+foyda_i   = daromad(sotuv_i) − xarajat(narx_i) − kredit_to‘lovi
+P(zarar) = ulush(foyda_i < 0);  P10 / P50 / P90 — foyda kvantillari
+Eng xavfli omil = foyda bilan korrelyatsiyasi eng yuqori (modul bo‘yicha) o‘zgaruvchi
+Kredit tayyorligi indeksi (KTI)
+Omil
+Og‘irlik
+Hisoblash (0–100 ball)
+Moliyaviy hujjatlar
+20
+Biznes-reja, daftar hisoboti, rasmiy maqom hujjatlari mavjudligi
+Daftar muntazamligi
+20
+So‘nggi 60 kunda yozuv kiritilgan kunlar ulushi × 100
+Rentabellik
+20
+Sof foyda marjasi: 0% → 0 ball, 20% va undan yuqori → 100 ball
+Stress-testga chidamlilik
+15
+(1 − P(zarar)) × 100
+Qarz yuklamasi (DSCR)
+15
+min(100, DSCR / 1,5 × 100); DSCR = operatsion pul oqimi / qarz to‘lovi
+Rasmiy maqom
+10
+Norasmiy — 0, o‘zini o‘zi band — 60, YaTT/MChJ — 100
+Og‘irliklar — dastlabki ekspert taxmini; pilotda bank ma’lumotlari bilan kalibrlanadi. KTI — tavsiya, bank qarori emas.
+Formallashuv kalkulyatori
+Har bir maqom uchun (norasmiy / o‘zini o‘zi band / YaTT):
+soliq_yuki   = TaxRule qoidalari bo‘yicha (stavka, chegara, soha)
+imkoniyat    = kreditga kirish (KTI dagi “rasmiy maqom” bali),
+davlat dasturlari, keshbek, bank hisob raqami
+xavf         = jarima va tekshiruv xatari (sifat: past/o‘rta/yuqori)
+Natija: yillik sof farq (so‘m) va “rasmiylashsa nima o‘zgaradi” ro‘yxati
+8. Arxitektura va texnologik stek
+8.1. Ma’lumot oqimi
+[Telegram bot]        [Web ilova: Terminal / Xorazmiy]
+\                      /
+→  Django REST API  (JWT, RBAC, Swagger)
+|
+Celery + Redis  (fon vazifalar)
+|
+STT → Axborot ajratish → Normalizatsiya → Sifat nazorati
+|
+PriceObservation  →  PriceDaily (OHLC)  →  Forecast / Signal
+|                                   |
+Xarid agenti (TOP-3)              Bozor ma’muriyati paneli
+|
+Ledger → BusinessPlan → Stress-test → KTI → Kredit paketi (PDF)
+PostgreSQL 16 + pgvector   |   MinIO / media   |   LiteLLM → LLM provayderlar
+8.2. Texnologik stek
+Qatlam
+Texnologiya
+Izoh
+Frontend
+React 18 + Vite + TypeScript, Tailwind CSS + shadcn/ui, TanStack Query, Lightweight Charts (sham grafik), Recharts, React-Leaflet
+Mobil-first; qorong‘i “terminal” mavzusi
+Telegram bot
+aiogram 3 (webhook), DRF API bilan ishlaydi
+Ovoz (ogg) va rasmni qabul qiladi
+Backend API
+Django 5 + Django REST Framework, SimpleJWT, drf-spectacular (Swagger), django-filter
+Jamoaga tanish, tez yoziladi
+Real vaqt
+Django Channels (WebSocket) yoki SSE
+MVPda 10 s polling ham yetarli
+Fon vazifalar
+Celery + Redis, Celery beat
+Skreyping, prognoz, STT, PDF
+AI / ML
+LiteLLM, faster-whisper, sentence-transformers, statsforecast / Prophet, scikit-learn, NumPy
+Og‘ir modellar alohida worker’da
+Ma’lumotlar bazasi
+PostgreSQL 16 + pgvector
+Vektor qidiruv va vaqt qatorlari bitta bazada
+Fayllar
+MinIO (S3-mos) yoki lokal media
+Ovoz, rasm, PDF
+Hisobotlar
+WeasyPrint (HTML → PDF), python-docx
+O‘zbekcha shriftlar bilan
+DevOps
+Docker Compose, GitHub Actions (lint + test), VPS + Nginx + HTTPS
+Bitta buyruq bilan ishga tushadi
+Monitoring
+Strukturalangan loglar, Sentry (ixtiyoriy), LLMCallLog jadvali
+Token xarajatini kuzatish
+8.3. Repozitoriy tuzilmasi
+bozorpuls/
+├── backend/
+│   ├── config/                 # settings, urls, celery
+│   └── apps/
+│       ├── accounts/           # User, rollar, Telegram auth
+│       ├── catalog/            # Category, Product, sinonimlar
+│       ├── markets/            # Region, District, Market
+│       ├── prices/             # PriceObservation, PriceDaily, Forecast
+│       ├── sourcing/           # Supplier, Offer, RFQ, xarid agenti
+│       ├── ledger/             # Business, LedgerEntry
+│       ├── finance/            # loan, tax, plans, stress, KTI, programs
+│       ├── reports/            # PDF: kredit paketi, bozor hisoboti
+│       ├── ai/                 # llm, stt, extract, normalize,
+│       │                       #   forecast, anomaly, rag, agent
+│       └── bot/                # aiogram handlerlar
+├── frontend/src/pages/         # Pulse, Product, Agent, Ledger, Plan,
+│                               #   Credit, Tax, MarketAdmin
+├── data/                       # seed, test_sets/
+├── docs/                       # TZ, API, pitch
+├── docker-compose.yml
+└── README.md
+8.4. Ma’lumotlar modeli
+Jadval
+Asosiy maydonlar
+User
+id, telegram_id, phone, role [entrepreneur, supplier, market_admin, bank, admin], lang, district_id, reputation, consent_at
+Region / District / Market
+id, name_uz, name_ru, parent_id; market: district_id, lat, lng, type [dehqon, ulgurji, supermarket, onlayn]
+Category / Product
+id, name_uz, aliases[], base_unit, category_id, is_social, embedding vector(1024)
+PriceObservation
+id, product_id, market_id, price_per_base_unit BIGINT, qty, unit, raw_text, source_type, source_ref, confidence, status [ok, review, rejected], user_id?, media_url, observed_at — indeks (product_id, market_id, observed_at)
+PriceDaily / Forecast
+product_id, market_id, date, open, high, low, close, median, n_obs / horizon, yhat, lo, hi, signal, model_version, mape
+Supplier / Offer / RFQ / Bid
+supplier: name, district_id, phone, rating; offer: product_id, price, min_qty, delivery_terms, valid_until; rfq: buyer_id, product_id, qty, deadline; bid: rfq_id, supplier_id, price, delivery_cost
+Business
+id, owner_id, name, sector (OKED), district_id, legal_status [informal, self_employed, yatt, llc], tax_regime
+LedgerEntry
+business_id, type [income, expense], amount BIGINT, category, product_id?, qty, source [voice, text, manual], raw_text, confirmed, date
+BusinessPlan / StressTestRun
+inputs JSONB, outputs JSONB (NPV, payback, BEP), price_snapshot JSONB, version / n, p_loss, p10, p50, p90, top_risk_factor
+LoanProgram
+name, provider, rate, max_amount, term, grace, collateral, guarantee_pct, subsidy_rule JSONB, eligibility JSONB, legal_ref_url, valid_from, valid_to
+TaxRule
+regime, rate, base, threshold_min, threshold_max, sector_filter, valid_from, valid_to, legal_ref_url
+CreditReadiness / CreditPackage
+business_id, score, factors JSONB, recommendations JSONB, computed_at / plan_id, file_url, sent_to_bank_at, consent
+PriceAlert / Report
+user_id, product_id, market_id?, condition, threshold, is_active / type, params JSONB, file_url, created_by
+KnowledgeChunk
+doc_title, clause, text, url, embedding
+AuditLog / LLMCallLog
+user, action, object, ts / model, tokens_in, tokens_out, latency_ms, tools, cost
+Pul va vaqt bilan ishlash qoidalari
+•  Pul qiymatlari BIGINT (butun so‘m) — float ishlatilmaydi; stavkalar DECIMAL(7,4).
+•  Barcha vaqtlar UTC da saqlanadi va Asia/Tashkent (UTC+5) da ko‘rsatiladi.
+•  Soliq va kredit qoidalari ma’lumotlar bazasida saqlanadi (valid_from / valid_to bilan), kodda qotirilmaydi.
+8.5. Asosiy API endpointlar
+Metod
+Endpoint
+Vazifa
+Rol
+POST
+/api/auth/telegram/
+Telegram orqali kirish, JWT
+Hamma
+GET
+/api/catalog/products/?q=
+Mahsulot qidiruvi (sinonim, kirill)
+Hamma
+POST
+/api/prices/ingest/
+Matn / ovoz / rasm → tuzilgan narx (multipart)
+Tadbirkor, supplier
+POST
+/api/prices/{id}/confirm/
+Foydalanuvchi tasdig‘i
+Muallif
+GET
+/api/prices/pulse/
+Tiker, TOP o‘zgarishlar, indeks
+Hamma
+GET
+/api/prices/ohlc/?product=&market=&days=
+Sham grafik ma’lumoti
+Hamma
+GET
+/api/prices/compare/?product=
+Bozorlar kesimida taqqoslash
+Hamma
+GET
+/api/forecast/?product=&market=
+Prognoz + signal
+Hamma
+POST
+/api/sourcing/search/
+Xarid agenti (TOP-3 yakuniy narx)
+Tadbirkor
+POST / GET
+/api/sourcing/rfq/
+Teskari tender
+Tadbirkor, supplier
+POST
+/api/agent/chat/
+Xorazmiy chat (SSE stream)
+Tadbirkor, bank
+POST / GET
+/api/ledger/voice/ , /api/ledger/report/?period=
+Ovozli daftar va hisobot
+Tadbirkor
+POST
+/api/finance/loan/calc/
+Kredit kalkulyatori
+Hamma
+GET
+/api/finance/programs/match/
+Mos dasturlar
+Tadbirkor
+POST
+/api/finance/tax/compare/
+Soliq rejimlarini taqqoslash
+Hamma
+POST
+/api/finance/status/compare/
+Formallashuv kalkulyatori
+Tadbirkor
+POST
+/api/plans/ , /api/plans/{id}/stress-test/
+Biznes-reja va stress-test
+Tadbirkor
+GET
+/api/plans/{id}/export/?format=pdf
+Reja eksporti
+Tadbirkor
+GET / POST
+/api/credit-readiness/{business_id}/ , /api/credit-package/
+KTI va bankka yuborish
+Tadbirkor, bank*
+GET
+/api/market-admin/overview/ , /api/market-admin/report/
+Bozor paneli va hisobot
+market_admin
+WS
+/ws/pulse/
+Real vaqt narx oqimi
+Hamma
+* bank faqat tadbirkor roziligi bilan ko‘radi. Swagger: /api/docs/
+8.6. Ma’lumot manbalari
+Manba
+Nima beradi
+Olish usuli
+MVP holati
+Crowd (Telegram bot)
+Bozor narxlari, savdo daftari
+Bot orqali
+Real (jamoa va bozordagi intervyu ishtirokchilari) + demo
+OLX.uz, Uzum Market
+Onlayn narxlar, e’lonlar soni
+Ochiq sahifalar; foydalanish shartlari va robots.txt ga rioya
+P1: 1 ta manba
+UzEx (uzex.uz)
+Birja kotirovkalari: un, shakar, yoqilg‘i va boshqalar
+Ochiq nashrlar → CSV import
+P0 (qo‘lda import)
+Statistika qo‘mitasi, xorazmstat.uz, data.gov.uz
+Narx indekslari, aholi, biznes soni
+Ochiq nashrlar va ochiq to‘plamlar
+P0 (taqqoslash uchun)
+Markaziy bank
+Asosiy stavka, o‘rtacha kredit foizlari
+Ochiq nashrlar
+P0 (qo‘lda)
+lex.uz
+Soliq kodeksi, farmon va qarorlar
+Hujjat matni
+P0: TaxRule manbasi; P1: RAG
+Banklar, Palata, jamg‘arma saytlari
+Kredit dasturlari shartlari
+Ochiq sahifalar
+P0: 5+ dastur qo‘lda
+Sintetik generator
+90 kunlik narx qatorlari, biznes profillari
+Kod (seed_demo)
+P0, “DEMO” belgisi bilan
+Halollik qoidasi
+Demo ekranlarida sintetik ma’lumot ishlatilsa, “DEMO ma’lumot” belgisi turadi. Real yig‘ilgan ma’lumot hajmi alohida ko‘rsatiladi (maqsad: 19-sentabrgacha Urganch bozorida kamida 100 ta real narx). Hakamlar bu savolni albatta beradi — ochiq javob ishonch uyg‘otadi.
+9. Nofunksional talablar
+Soha
+Talab
+Tezlik
+API p95 < 500 ms (AI’siz so‘rovlar); chatda birinchi token < 3 s; terminal sahifasi < 2 s; demo uchun 100 parallel foydalanuvchi
+Barqarorlik
+Demo davomida uzluksiz ishlash; internet uzilsa — lokal docker-compose va oldindan keshlangan LLM javoblari (“demo rejimi”)
+Xavfsizlik
+JWT + rolga asoslangan ruxsatlar (RBAC); HTTPS; rate limiting; OWASP Top-10 (ORM, CSRF, XSS); maxfiy kalitlar faqat .env da, repoga tushmaydi
+Maxfiylik
+Minimal shaxsiy ma’lumot (Telegram ID, telefon); rozilik ekrani; tadbirkorning daftar va moliyaviy ma’lumotlari faqat o‘ziga ko‘rinadi; bankka faqat aniq rozilik bilan yuboriladi; bozor ma’muriyati paneli faqat agregat narxlarni ko‘radi, konkret sotuvchi ma’lumotini emas
+Qonunchilik
+“Shaxsga doir ma’lumotlar to‘g‘risida”gi Qonun (2019, 2026 o‘zgarishlari bilan) — xavfsiz tanlov sifatida ma’lumotlar O‘zbekistondagi serverda saqlanadi; AI to‘g‘risidagi Qonun (2026) — muhim qarorlar inson nazoratida, KTI faqat tavsiya; soliq va kredit javoblarida huquqiy manba va ogohlantirish
+Til
+O‘zbek (lotin) asosiy; kirill va rus; ovozda sheva farqlari tasdiqlash qadami bilan qoplanadi
+Qulaylik
+Mobil-first (360 px dan); asosiy natija 3 bosishda; yozishni yoqtirmaydigan foydalanuvchi uchun ovoz; katta tugmalar
+Kuzatuv
+Strukturalangan loglar; LLM chaqiruvlar jurnali (token, xarajat); xatolar Sentry’da
+Sifat
+Kalkulyatorlar va normalizatsiya uchun pytest unit testlari; AI test to‘plamlari data/test_sets/ papkasida; CI’da lint va testlar
+Eslatma: bu TZ huquqiy maslahat emas. Pilotdan oldin ma’lumotlar bilan ishlash tartibini yurist bilan tekshiring; 2026 yildagi qonun o‘zgarishlari bo‘yicha manbalar orasida farqlar bor.
+10. UI/UX: ekranlar
+#
+Ekran
+Asosiy elementlar
+Rol
+Ust.
+1
+Kirish va rol tanlash
+Telegram login, rol, til, tuman, rozilik
+Hamma
+P0
+2
+“Bozor pulsi”
+Tiker, indeks kartalari, TOP o‘zgarishlar
+Tadbirkor
+P0
+3
+Mahsulot terminali
+Sham grafik, prognoz zonasi, signal belgisi, bozorlar jadvali
+Tadbirkor
+P0
+4
+Xarid agenti (chat)
+Chat, taklif kartalari (yakuniy narx, tejash %), “Xabar yuborish”
+Tadbirkor
+P0
+5
+Ovozli daftar
+Kunlik kirim/chiqim, foyda-zarar grafigi
+Tadbirkor
+P0
+6
+Biznes-reja ustasi
+5 qadamli forma; NPV, payback, BEP kartalari; manbali narxlar
+Tadbirkor
+P0
+7
+Stress-test
+Foyda taqsimoti gistogrammasi, zarar ehtimoli, eng xavfli omil
+Tadbirkor, bank
+P0
+8
+Kredit markazi
+Kalkulyator, mos dasturlar, KTI spidometri, “3 qadam”
+Tadbirkor
+P0
+9
+Soliq va formallashuv
+Rejimlar ustunli grafigi, manba havolalari, formallashuv kalkulyatori
+Tadbirkor
+P0
+10
+Kredit paketi
+PDF ko‘rish, rozilik, “bankka yuborish”
+Tadbirkor
+P1
+11
+Bozor ma’muriyati paneli
+Narx holati, anomaliyalar, ijtimoiy tovarlar, hisobot
+market_admin
+P1
+12
+Bank paneli
+Kelgan kredit paketlari, KTI, stress-test
+Bank
+P1
+13
+Moderatsiya
+Shubhali narxlar navbati
+Admin
+P0
+Dizayn yo‘nalishi
+M1 — qorong‘i “terminal” mavzusi (birja hissi); M2 — yorug‘ va samimiy “maslahatchi” mavzusi.
+Ranglar xakaton brendiga yaqin (indigo / binafsha) + signal ranglari: yashil (OL), qizil (KUT), sariq (NEYTRAL).
+Shriftlar: sarlavhalar uchun Chakra Petch (xakaton brendi), matn uchun Inter; raqamlar tabular ko‘rinishda.
+Har bir raqam yonida kichik “manba” chipi (narx bazasi, kalkulyator, lex.uz, DEMO).
+11. Biznes model
+11.1. Daromad oqimlari
+Oqim
+Kim to‘laydi
+Narx (gipoteza)
+Nima oladi
+Freemium → Pro obuna
+Tadbirkor
+Bepul: narxlar, oyiga 5 ta agent so‘rovi. Pro: 59 000 so‘m/oy
+Cheksiz agent, prognoz, biznes-reja, stress-test, ogohlantirishlar
+Kredit lidlari va skoring API
+Bank / MMT
+Tasdiqlangan kredit paketi uchun 150 000–300 000 so‘m yoki API obunasi
+Hujjati tayyor, KTI va stress-testdan o‘tgan mijoz (faqat rozilik bilan)
+Yetkazib beruvchi obunasi
+Ulgurji sotuvchi, fermer
+99 000 so‘m/oy “tasdiqlangan yetkazib beruvchi” yoki RFQ bitimidan 1–2%
+So‘rovlarga birinchi chiqish, yuqoriroq o‘rin, xaridor statistikasi
+Bozor ma’muriyati SaaS
+Bozor
+1–3 mln so‘m/oy
+Narx monitoringi, spekulyatsiya signallari, haftalik hisobot
+Gipoteza
+Barcha narxlar gipoteza. Ular xakaton davomida 10–15 ta intervyuda tekshiriladi va natija CP2 slaydiga qo‘yiladi. Workshopdagi “Dehqon AI” misolidagi kabi, faqat B2C obunaga tayanish zarar keltirishi mumkin. Shuning uchun asosiy daromad B2B (bank va yetkazib beruvchi) dan keladi, B2C freemium esa ma’lumot manbai va tarqatish kanali vazifasini bajaradi.
+11.2. Unit-ekonomika (taxminiy)
+Ko‘rsatkich
+Pro obuna (tadbirkor)
+Bank hamkor
+Oylik daromad
+59 000 so‘m
+200 paket × 200 000 = 40 mln so‘m
+AI va server xarajati
+~12 000 so‘m (kesh, kichik modellar)
+~4 mln so‘m
+Yalpi marja
+~80%
+~90%
+Qolish muddati
+10 oy (gipoteza)
+24 oy (shartnoma)
+LTV
+59 000 × 0,8 × 10 = 472 000 so‘m
+40 mln × 0,9 × 24 = 864 mln so‘m
+CAC
+~90 000 so‘m (Biznes hamroh, bozor agentlari, Telegram hamjamiyatlari)
+~15 mln so‘m (uchrashuvlar, pilot, integratsiya)
+LTV / CAC
+≈ 5,2 — sog‘lom (≥ 3)
+≈ 58 — juda sog‘lom
+11.3. Bozor hajmi (pastdan yuqoriga)
+Daraja
+Hisob
+Natija
+TAM — O‘zbekiston
+1,21 mln faol kichik biznes subyekti × yillik ARPU 708 000 so‘m (59 000 × 12)
+≈ 857 mlrd so‘m/yil (bank va yetkazib beruvchi oqimlaridan tashqari)
+SAM — savdo va umumiy ovqatlanish
+TAM subyektlarining taxminan 40% i (gipoteza, tekshirish kerak) × 708 000 so‘m
+≈ 343 mlrd so‘m/yil
+SOM — 1-yil, Xorazm
+Xorazm: 43,5 subyekt / 1 000 aholi × 2,03 mln ≈ 88 ming subyekt; 2% → ~1 770 Pro (1,25 mlrd) + 1 bank (480 mln) + 50 yetkazib beruvchi (59 mln) + 3 bozor (72 mln)
+≈ 1,9 mlrd so‘m/yil
+Manbalar: Statistika qo‘mitasi (1,21 mln subyekt, Xorazm zichligi 43,5), xorazmstat.uz (aholi 2 032,4 ming, 01.01.2025). Ulushlar — jamoa gipotezasi.
+11.4. Raqobatchilar tahlili
+Xususiyat
+BozorPuls
+stat.uz / UzEx
+OLX / Uzum
+Umumiy AI chat
+Biznes hamroh (inson)
+Dehqon bozorining real narxlari
+✅
+➖ agregat, birja tovarlari
+➖ onlayn e’lonlar
+➖
+➖
+Prognoz va xarid signali
+✅
+➖
+➖
+➖
+➖
+Yetkazish bilan yakuniy narx (TOP-3)
+✅
+➖
+➖
+➖
+➖
+O‘zbekcha ovoz orqali kiritish
+✅
+➖
+➖
+qisman
+✅ (inson)
+Real narxli biznes-reja + stress-test
+✅
+➖
+➖
+➖ narxni taxmin qiladi
+qisman
+2026 soliq va dasturlar, manbasi bilan
+✅
+➖
+➖
+➖ eskirgan bo‘lishi mumkin
+✅
+Kredit tayyorligi indeksi va paket
+✅
+➖
+➖
+➖
+qisman
+Mavjudlik va narx
+24/7, bepul / 59k
+Bepul
+Bepul
+Obuna
+Bepul, ish vaqtida
+Pozitsiya
+Biz “Biznes hamroh” bilan raqobatlashmaymiz — uning raqamli dvigateli bo‘lamiz. Palata maslahatchilari BozorPuls orqali tadbirkorga real narx, biznes-reja va kredit paketini bir necha daqiqada tayyorlab beradi. Muammo egasi — Palata bo‘lgani uchun bu xabar soha mentoriga ayniqsa muhim.
+11.5. “ChatGPT ertaga shu funksiyani qo‘shsa, bizda nima qoladi?”
+Mahalliy ma’lumot: crowd narx bazasi — har yangi foydalanuvchi bilan qiymati oshadi (tarmoq effekti).
+Til va kontekst: o‘zbekcha bozor ovozlari, mahalliy birliklar (qop, bog‘, tog‘ora), 2026 soliq qoidalari.
+Tarqatish kanali: Palata, bozor ma’muriyatlari va banklar bilan hamkorlik.
+Ish jarayoniga kirib borish: tadbirkorning daftar tarixi va kredit paketi — boshqa vositaga o‘tish qiyin.
+Yetkazib beruvchilar tarmog‘i: takliflar bazasi va RFQ tarixini nusxalab bo‘lmaydi.
+11.6. Bozorga chiqish va maqsadlar
+Davr
+Maqsad
+KPI
+Hozir (xakaton)
+MVP; 10–15 intervyu; real narxlar yig‘ish; pilotga tayyorlik haqida yozma xabarlar
+100+ real narx, 1–2 ta “pilotga tayyormiz” xabari (maqsad)
+3 oy
+Xorazm pilot: Urganch markaziy dehqon bozori + Biznes hamroh (Urganch)
+1 000 faol foydalanuvchi, 20 000 narx kuzatuvi, 50 kredit paketi
+6 oy
+Xorazm bo‘ylab + 1 bank hamkor + 50 yetkazib beruvchi
+5 000 foydalanuvchi, 300 Pro, bank shartnomasi
+1 yil
+Xorazm + 2 viloyat pilot
+20 000 foydalanuvchi, ~1 770 Pro, ~1,9 mlrd so‘m yillik daromad (taxminiy)
+3 yil
+14 hudud; Markaziy Osiyo (Qozog‘iston, Qirg‘iziston, Tojikiston); ochiq API
+150 000 foydalanuvchi; bir nechta bank hamkor
+12. Xakaton davomidagi ish rejasi
+12.1. Rollar
+Rol
+Mas’uliyat
+Jamoa sardori / Tech lead (tavsiya: Azizbek)
+Arxitektura, AI agent (AI-7) va tool’lar, integratsiya, kod sifati, pitch va demo sahnasi
+Backend dasturchi
+Django modellari, API, Telegram bot, Celery, seed_demo, kalkulyatorlar (kredit, soliq, KTI), PDF
+Frontend dasturchi
+React ekranlari: Pulse, Terminal, Agent chat, Daftar, Reja, Stress-test, Kredit markazi
+AI/ML mutaxassis
+STT, axborot ajratish, normalizatsiya, prognoz va signal, anomaliya, Monte-Karlo, test to‘plamlari
+Dizayner / biznes-analitik
+Figma (asosiy ekranlar), pitch deck (Shablon asosida), intervyular, unit-ekonomika, raqamlarni tekshirish, video
+Jamoada 2 backend bo‘lsa: ikkinchisi Telegram bot va bozor ma’muriyati panelini oladi.
+12.2. Vaqt jadvali (qolgan vaqt)
+Vaqt
+Maqsad
+Backend
+Frontend
+AI/ML
+Dizayn / biznes
+18.09 kechasi (ixtiyoriy, 1–2 soat)
+Poydevor
+Repo, docker-compose, Django loyiha, DC modellari, seed skeleti
+Vite + Tailwind + shadcn, layout, routing, mock API
+STT va axborot ajratish prototipi (20 test jumla), LiteLLM
+Brend, asosiy ekran wireframe, intervyu savolnomasi
+Uyqu 4–5 soat
+MAJBURIY
+—
+—
+—
+—
+18.09 08:00–11:00 Sprint 1
+CP1 uchun ishlaydigan vertikal kesim
+/prices/ingest, /ohlc, /loan/calc, /tax/compare; bot narx qabul qiladi
+Pulse + Terminal (sham grafik) + chat UI
+Ajratish → normalizatsiya → baza oqimi; prognoz v0; agentda 3 tool
+Figma asosiy ekranlar; CP1 deck; 3–5 tezkor intervyu
+11:00–13:30
+CP1 demo tayyor
+Deploy (VPS yoki lokal), seed_demo
+Ekranlarni API ga ulash
+“HOZIR OL / KUT” signali
+CP1 deck yakuni; pitchni 2 marta mashq qilish
+14:00–18:00
+CHECKPOINT 1
+Navbat bilan 3 mentor × 10 daqiqa
+Mentor izohlarini jurnalga yozish
+18.09 18:00–00:30 Sprint 2
+M2 ni to‘liq qurish
+Biznes-reja API, stress-test, KTI, ovozli daftar, dasturlar va soliq qoidalari
+Reja ustasi, stress-test, kredit markazi, daftar
+Monte-Karlo, KTI, xarid agenti TOP-3, ovozli daftar
+Unit-ekonomika, raqobat jadvali, TAM/SAM/SOM, bozorga chiqish rejasi
+19.09 07:30–11:00 Sprint 3
+Chuqurlashtirish + validatsiya
+Formallashuv kalkulyatori, kredit paketi PDF, bozor paneli (P1)
+Soliq/formallashuv ekrani, kredit paketi, polish
+Anomaliya detektori, prognoz aniqligi (backtest jadvali), RAG v0
+09:00–11:00 Urganch bozorida 10–15 intervyu + bot orqali real narxlar
+11:00–13:30
+CP2 tayyorgarlik
+Testlar, README, Swagger, GitHub tartibi
+Mobil ko‘rinish, demo oqimi
+AI test natijalari (aniqlik jadvali)
+CP2 deck (validatsiya natijalari bilan), demo mashqi
+14:00–18:00
+CHECKPOINT 2 + GitHub havolasi
+Mentor izohlariga javoblar slaydi
+19:00 / 19:30–23:30
+Top-15 e’loni → final tayyorgarligi
+Xatolarni tuzatish, demo rejimi (kesh)
+Demo oqimini silliqlash
+Zaxira javoblar
+7 daqiqalik pitch, 2 daqiqalik zaxira video, savol-javob mashqi
+20.09 09:30
+FINAL
+12.3. MVPga kirmaydi (ongli ravishda)
+Norasmiy iqtisodiyot monitoringi (№21) — qamrovdan chiqarildi; pitchda faqat “keyingi bosqich” sifatida bir jumla.
+Haqiqiy to‘lov integratsiyasi (Click, Payme) — faqat “Pro” tugmasi maketi.
+Native mobil ilova — veb (mobil-first) va Telegram yetarli.
+Real bank integratsiyasi — kredit paketi demo bank paneliga tushadi.
+To‘liq RFQ marketplace va ko‘p viloyatli qamrov.
+13. Validatsiya rejasi
+Maqsad (19-sentabr 11:00 gacha)
+10–15 ta maqsadli foydalanuvchi bilan suhbat • 100+ real narx • 1–2 ta “pilotga tayyormiz” degan yozma xabar (Telegram yoki qog‘ozda).
+Qayerda
+Urganch markaziy dehqon bozori: sotuvchilar va xaridorlar.
+Yaqin atrofdagi kafe, oshxona, somsaxona va oziq-ovqat do‘konlari egalari.
+Xakatondagi biznes va soha mentorlari, Biznes hamroh markazi (telefon orqali).
+Savollar (kelajak haqida emas, o‘tmishdagi haqiqiy xatti-harakat haqida)
+Oxirgi marta xom ashyo yoki tovarni qachon va qayerdan oldingiz? Narxni qanday bildingiz?
+Eng arzon taklifni topishga haftasiga qancha vaqt ketadi? Qimmatga olib qo‘yganingizni oxirgi marta qachon bilgansiz?
+Kirim-chiqimni qayerda yuritasiz: daftar, Excel yoki hech qayerda?
+Oxirgi 2 yilda kredit olishga urinib ko‘rganmisiz? Nima to‘sqinlik qildi?
+Qaysi soliq rejimidasiz va uni qanday tanlagansiz?
+Oxirida: “Pilotda bepul qatnashish uchun raqamingizni qoldirasizmi?” va “Shu vosita uchun oyiga 59 000 so‘m to‘lagan bo‘larmidingiz?”
+Natijani slaydda ko‘rsatish formati
+“N ta tadbirkor bilan gaplashdik: X tasi narxni qo‘shni yoki Telegram guruhdan biladi, Y tasi hisob yuritmaydi, Z tasi kreditda hujjat muammosiga duch kelgan, K tasi pilotga yozildi.” — faqat real natijalarni yozing.
+14. Final: pitch va demo ssenariysi
+14.1. Pitch — 3 daqiqa
+Vaqt
+Blok
+Mazmun
+0:00–0:20
+Hook
+“1200 yil oldin Al-Xorazmiy ‘Al-jabr’ kitobini savdo va meros hisob-kitoblari uchun yozgan. Bugun uning yurtidagi somsaxona egasi un narxini hali ham qo‘shnisidan so‘raydi.”
+0:20–0:50
+Muammo
+3 raqam: kichik biznes — YaIMning 51,5%; kichik korxonalarning faqat 10% ida bank krediti bor; moliyalash tanqisligi $6 mlrd. Sabab bitta: tadbirkorda raqam yo‘q.
+0:50–1:20
+Yechim
+BozorPuls: narx terminali + AI moliyaviy hamroh; ovozdan biznes-rejagacha bitta zanjir (sxema).
+1:20–1:50
+Validatsiya
+“Urganch bozorida N ta suhbat, N ta real narx, K ta pilot arizasi” (faqat real raqamlar).
+1:50–2:20
+Biznes model
+Tadbirkor — bepul/Pro; bank — lid uchun; yetkazib beruvchi va bozor — obuna. LTV/CAC ≈ 5.
+2:20–2:45
+Raqobat
+“Biznes hamrohning raqamli dvigateli”; ChatGPT’dan farq — mahalliy real ma’lumot.
+2:45–3:00
+Jamoa va so‘rov
+“Palata va Urganch bozori bilan pilotni boshlashga tayyormiz.”
+14.2. Demo — 2 daqiqa
+Persona: Dilshod aka, Urganchdagi somsaxona egasi (to‘qima personaj, demo ma’lumotlar bilan).
+Vaqt
+Qadam
+Ekranda nima ko‘rinadi
+20 s
+1. Ovozli narx
+Telegramga ovoz: “Dehqon bozorida un, 50 kglik qopi 450 ming”. Bot javobi: “Un — 9 000 so‘m/kg, Urganch markaziy dehqon bozori. To‘g‘rimi?” ✅ → +10 ball. Terminalda tiker yangilanadi.
+30 s
+2. Terminal va xarid agenti
+Un sham grafigi → prognoz zonasi → “HOZIR OL” signali. Chat: “Somsaxonaga 500 kg un va 100 kg go‘sht kerak, eng arzonini top” → TOP-3 taklif, yetkazish bilan yakuniy narx, tejash %.
+40 s
+3. Kredit yo‘li
+“Ikkinchi filial uchun 150 mln kredit kerak” → biznes-reja (real narxlar bilan) → stress-test: zarar ehtimoli va eng xavfli omil → kredit kalkulyatori (davlat kompensatsiyasi bilan) → KTI va “3 qadam”.
+30 s
+4. Natija
+Soliq rejimlari taqqoslanadi va formallashuv kalkulyatori ko‘rsatiladi → “Kredit paketi” PDF yaratiladi va rozilik bilan bankka yuboriladi (bank paneli).
+Yakuniy jumla
+“Bitta ovozli xabar — xarid arzonlashdi, biznes-reja real narxlar ustiga qurildi va kredit paketi bankka ketdi.”
+Demo qoidalari
+•  Demo oqimi kamida 5 marta to‘liq mashq qilinadi. Demoni sahnada birinchi marta ishga tushirmang.
+•  Internet uzilsa — lokal rejim va keshlangan javoblar; eng yomon holatda — oldindan yozib olingan 2 daqiqalik video.
+•  Vaqtni qat’iy nazorat qiling: bitta odam taymer ushlaydi.
+15. Hakamlar savollariga tayyorgarlik
+Ehtimoliy savol
+Javob g‘oyasi
+Ma’lumotni qayerdan olasiz? Sotuvchi nega narx yuboradi?
+“Beraman — olaman” modeli: narx yuborgan kishi eng arzon takliflar va ball oladi; bozor ma’muriyati bilan pilot; ochiq manbalar va skreyping; har yozuvga ishonch bali.
+Soxta narx yuborilsa-chi?
+MAD z-skor + IsolationForest, reputatsiya, bir nechta mustaqil manba, moderatsiya navbati; ekranda anomaliya detektori ishlashini ko‘rsatish.
+ChatGPT buni qila olmaydimi?
+U Urganch bozoridagi bugungi un narxini va 2026 soliq qoidalarini manbasi bilan bilmaydi; bizda mahalliy real ma’lumot, o‘zbekcha ovoz va tarqatish kanali bor.
+Kim to‘laydi? Tadbirkor 59 ming to‘laydimi?
+Asosiy daromad — bank lidlari va yetkazib beruvchilar; B2C freemium ma’lumot manbai sifatida. Intervyu natijalarini ko‘rsatish.
+Nega №21 ni (norasmiy iqtisodiyot) olmadingiz?
+48 soatda ikki muammoni chuqur yechish uchun. Anonim va agregat narx ma’lumoti kelajakda hududiy tahlilga asos bo‘ladi — bu pilotdan keyingi bosqich.
+Buni 2 kunda qildingizmi?
+GitHub commit tarixi xakaton kunlaridan boshlanadi; qaysi modul qachon qurilgani ko‘rinadi.
+Prognoz qanchalik aniq?
+Backtest MAPE ekranda; signal faqat ishonch oralig‘i bilan beriladi; ma’lumot ko‘paygan sari aniqlik oshadi.
+Kredit skoringingizga bank ishonadimi?
+KTI — bank qarori emas, tavsiya va hujjat tayyorligi bahosi. Bank o‘z skoringini qo‘llaydi; biz unga tayyor, tekshirilgan hujjatlar paketini beramiz.
+Soliq bo‘yicha noto‘g‘ri maslahat bersangiz-chi?
+Qoidalar bazada, har javobda lex.uz havolasi va sana; javoblarda ogohlantirish; murakkab holat — mutaxassisga yo‘naltirish.
+Nega aynan sizning jamoa?
+Jamoa tajribasi: AI, SaaS, Telegram avtomatlashtirish, Xorazmni bilish; har a’zo o‘z modulini tushuntiradi. [Jamoa yutuqlarini qo‘shing]
+16. Xavflar va zaxira reja
+Xavf
+Ehtimol
+Ta’sir
+Chora
+Ikki modul ham yarim tayyor qoladi
+O‘rta
+Yuqori
+Faqat P0; M1 avval, M2 keyin; har modulda bitta “wow” to‘liq ishlasin
+O‘zbekcha STT sifati past
+O‘rta
+O‘rta
+Tasdiqlash qadami, matn orqali kiritish, qisqa ovozlar
+LLM API limiti yoki internet uzilishi
+O‘rta
+Yuqori
+LiteLLM’da zaxira model, kesh, lokal demo rejimi, mobil hotspot
+Real ma’lumot kam
+Yuqori
+O‘rta
+Sintetik ma’lumot “DEMO” belgisi bilan; bozorda 100+ real narx yig‘ish
+Hakamlar “bu shunchaki narx ilovasi” deydi
+O‘rta
+O‘rta
+Pitchda zanjirni ko‘rsatish: narx → reja → kredit; ya’ni pul topish emas, pul olish yo‘li
+Soliq yoki kredit ma’lumotida xatolik
+O‘rta
+Yuqori
+Qoidalar bazada + lex.uz havolasi; demo oldidan 5 ta keysni qo‘lda tekshirish
+Jamoa charchashi
+Yuqori
+Yuqori
+Uyqu jadvali, navbatchilik, taqdimotchi kechasi uxlaydi
+17. Tayyorlik mezonlari (Definition of Done)
+CP1 — 18-sentabr, 14:00 gacha
+GitHub repo ochiq (yoki mentorlarga ruxsat berilgan), mazmunli commit tarixi.
+Telegram bot narxni matn va ovoz orqali qabul qiladi va bazaga yozadi.
+Terminal: demo ma’lumotda sham grafik va tiker.
+Chat: kredit va soliq kalkulyatori tool orqali ishlaydi.
+CP1 deck: muammo (raqamlar), yechim, volan sxemasi, biznes model v1, reja.
+Kamida 3 ta intervyu.
+CP2 — 19-sentabr, 14:00 gacha
+Prognoz va “HOZIR OL / KUT” signali; xarid agenti TOP-3.
+Biznes-reja + stress-test + KTI; ovozli daftar; soliq va formallashuv taqqoslovi.
+Anomaliya detektori va moderatsiya navbati ishlaydi.
+README, docker-compose, Swagger, unit testlar; AI test natijalari jadvali.
+CP2 deck: validatsiya natijalari, mentor izohlariga javoblar, unit-ekonomika.
+GitHub havolasi topshirilgan.
+Final — 20-sentabr
+7 daqiqalik chiqish kamida 3 marta to‘liq mashq qilingan.
+Demo rejimi va zaxira video tayyor.
+Savol-javob kartochkalari; kim qaysi savolga javob berishi kelishilgan.
+A ilova. Manbalar
+Umummilliy AI Xakaton taqdimoti (Xorazm bosqichi, 17–20.09.2026) va “Xorazm dolzarb muammolar” ro‘yxati — tashkilotchilar materiallari.
+R. Ibrahimov, “Business Aspects of Startups” (ProSkill), 17.09.2026; “AI Startaplar” workshopi; Pitch Day taqdimot shabloni.
+Kichik biznes 2025 (51,5%, 1,21 mln subyekt, Xorazm 43,5): https://www.uzdaily.uz/en/small-business-in-uzbekistan-accounts-for-over-half-of-gdp-in-2025/
+Jahon banki, FINGROW (15.12.2025) — MSME moliyalash tanqisligi $6 mlrd, kichik korxonalarning 10% ida kredit: https://www.worldbank.org/en/news/press-release/2025/12/15/improved-access-to-finance-to-help-7000-businesses-in-uzbekistan-grow-and-create-jobs
+Global Findex 2025 — O‘zbekiston (rasmiy qarz oluvchilar 12%): https://gfrid.org/publications/uzbekistans-financial-inclusion-at-a-glance-global-findex-2025/
+S&P Global FinLit Survey (moliyaviy savodxonlik 21%): https://gflec.org/wp-content/uploads/2015/11/3313-Finlit_Report_FINAL-5.11.16.pdf
+Jahon banki / IFC, moliyaviy imkoniyatlar tadqiqoti (2020): https://www.ifc.org/content/dam/ifc/doc/mgrt/financial-capability-and-inclusion-eng.pdf
+EBRD va kichik biznes krediti, hujjat va garov muammosi (01.07.2026): https://www.euronews.com/business/2026/07/01/ebrd-backs-young-entrepreneurs-as-uzbek-small-firms-seek-credit
+MB asosiy stavkasi 14%: https://www.gazeta.uz/en/2026/07/30/cb-rate/ ; o‘rtacha kredit foizlari (iyun 2026): https://www.gazeta.uz/ru/2026/08/06/credits/
+2026 soliqlari: https://www.spot.uz/oz/2025/11/26/taxes-for-2026 ; YaTT va o‘zini o‘zi band uchun aylanma solig‘i: https://buxgalter.uz/publish/doc/text212712_nk-2026_izmeneniya_po_nalogu_s_oborota_dlya_ip_i_samozanyatyh ; 01.06.2026 dan o‘zgarishlar (QQS chegarasi, ixtiyoriy 6%): https://www.gazeta.uz/ru/2026/06/01/small-business/
+Davlat dasturlari: ayollar tadbirkorligi (04.12.2025): https://www.spot.uz/oz/2025/12/04/preferential-loans ; kooperatsiya uchun garovsiz kreditlar (12.09.2026): https://www.spot.uz/oz/2026/09/12/loans-entrepreneurs
+Narx statistikasining yangi metodologiyasi, oyiga ~2 mln kuzatuv (2026): https://www.gazeta.uz/ru/2026/02/04/inflation/
+Davlat xaridlarida AI “o‘rtacha bozor narxi” moduli: https://www.spot.uz/oz/2025/12/29/public-procurement
+UzEx birjasi va yarmarka platformasi: https://uzex.uz/en/pages/about-us
+Palata “Biznes hamroh” loyihasi (01.03.2026, 14 hududiy markaz): https://www.spot.uz/oz/2025/12/15/business-companion
+Bank kartalari soni 75,7 mln (01.08.2026): https://www.trend.az/casia/uzbekistan/4216860.html ; naqd pulsiz to‘lovlar ulushi (2025): https://www.uzdaily.uz/en/central-bank-of-uzbekistan-cash-turnover-increased-by-a-quarter-in-2025-share-of-cashless-payments-continues-to-grow/
+Majburiy naqd pulsiz to‘lovlar va yagona QR (2026): https://www.uzdaily.uz/en/uzbekistan-to-introduce-mandatory-cashless-payments-for-certain-goods-and-services-from-2026/
+Xorazm aholisi (2 032,4 ming, 01.01.2025): https://www.xorazmstat.uz/uz/matbuot-markazi/boshqarma-yangiliklar/17407-xorazm-viloyati-doimiy-aholisi-soni-dinamikasi ; Xorazm kichik biznes subyektlari: https://www.xorazmstat.uz/uz/matbuot-markazi/boshqarma-yangiliklar/17953-eng-ko-p-kichik-biznes-subyekti-qaysi-hududda-faoliyat-yuritmoqda-14
+AI va shaxsiy ma’lumotlar qonunchiligi (2026): https://www.legal500.com/developments/thought-leadership/legislative-updates-in-the-field-of-artificial-intelligence-and-personal-data-regulation-uzbekistan/
+Hindiston e-NAM (xalqaro namuna — 1 656 bozor, 18 mln fermer): https://www.pib.gov.in/PressReleasePage.aspx?PRID=2251543&reg=3&lang=1
+Eslatma: soliq stavkalari va chegaralari, kredit dasturlari shartlari va shaxsiy ma’lumotlar qonunidagi 2026 o‘zgarishlari bo‘yicha manbalarda farqlar uchraydi. TaxRule va LoanProgram jadvallariga kiritishdan oldin lex.uz dagi rasmiy matn bilan solishtiring.
+B ilova. Axborot ajratish uchun test jumlalar
+Test to‘plami namunasi (data/test_sets/extract.jsonl). Narxlar faqat misol uchun, real bozor narxi emas.
+Kirish (matn yoki ovoz transkripti)
+Kutilgan natija
+pomidor 8 ming
+Pomidor • 8 000 so‘m/kg • birlik taxminiy (kg) → tasdiqlash
+Urganch bozorida kartoshka kilosi 4500
+Kartoshka • 4 500 so‘m/kg • bozor: Urganch
+50 kglik qop un 450 ming
+Un • 9 000 so‘m/kg (450 000 ÷ 50)
+лук 3000 сум
+Piyoz • 3 000 so‘m/kg (kirill + rus sinonim)
+tuxum 10 talik 16 ming
+Tuxum • 1 600 so‘m/dona
+yarim tonna shakar 6 mln 200
+Shakar • 12 400 so‘m/kg (6 200 000 ÷ 500)
+go‘sht 95 mingdan
+Go‘sht (turi noma’lum) • 95 000 so‘m/kg • past ishonch → “Mol go‘shtimi yoki qo‘y go‘shtimi?”
+bugun 3 qop guruch qopi 450 mingdan sotdim
+Daftar: kirim • 1 350 000 so‘m • Guruch, 3 qop
+ijaraga 2 million to‘ladim
+Daftar: chiqim • 2 000 000 so‘m • kategoriya: ijara
