@@ -34,16 +34,16 @@ export default function Plan() {
   }
 
   return (
-    <div className="text-slate-900 max-w-3xl">
+    <div className="max-w-3xl">
       <h1 className="font-display text-3xl">Biznes-reja ustasi</h1>
-      <div className="flex gap-2 mt-3 text-xs">
+      <div className="flex gap-2 mt-3 text-xs flex-wrap">
         {steps.map((s, i) => (
-          <span key={s} className={`px-2 py-1 rounded-full ${i === step ? "bg-violet-600 text-white" : "bg-white border"}`}>
+          <span key={s} className={`px-2 py-1 rounded-full ${i === step ? "bg-violet-600 text-white" : "border border-line text-slate-300"}`}>
             {i + 1}. {s}
           </span>
         ))}
       </div>
-      <div className="mt-4 bg-white border rounded-2xl p-5 space-y-3">
+      <div className="mt-4 bg-panel/60 border border-line rounded-2xl p-5 space-y-3">
         {step === 0 && <Field label="Soha" value={form.sector} onChange={(v) => set("sector", v)} />}
         {step === 1 && <Field label="Joy" value={form.place} onChange={(v) => set("place", v)} />}
         {step === 2 && <Field label="Investitsiya, so'm" type="number" value={form.investment} onChange={(v) => set("investment", Number(v))} />}
@@ -55,13 +55,13 @@ export default function Plan() {
           </>
         )}
         <div className="flex justify-between">
-          <button onClick={() => setStep(Math.max(0, step - 1))}>Orqaga</button>
+          <button className="text-slate-400" onClick={() => setStep(Math.max(0, step - 1))}>Orqaga</button>
           {step < 4 ? (
-            <button className="bg-violet-600 text-white px-4 py-2 rounded-lg" onClick={() => setStep(step + 1)}>
+            <button className="bg-violet-600 px-4 py-2 rounded-lg" onClick={() => setStep(step + 1)}>
               Keyingi
             </button>
           ) : (
-            <button className="bg-violet-600 text-white px-4 py-2 rounded-lg" onClick={build}>
+            <button className="bg-violet-600 px-4 py-2 rounded-lg" onClick={build}>
               Hisoblash
             </button>
           )}
@@ -72,7 +72,7 @@ export default function Plan() {
           <Stat label="NPV" value={som(plan.outputs?.npv)} />
           <Stat label="O'zini oqlash" value={`${plan.outputs?.payback_months ?? "—"} oy`} />
           <Stat label="Zararsizlik" value={`${plan.outputs?.break_even_units ?? "—"} dona`} />
-          <div className="sm:col-span-3 bg-white border rounded-2xl p-4 text-sm">
+          <div className="sm:col-span-3 bg-panel/60 border border-line rounded-2xl p-4 text-sm">
             <div className="font-medium mb-2">Xom ashyo narxlari (BozorPuls)</div>
             {Object.entries(plan.price_snapshot || {}).map(([k, v]: any) => (
               <div key={k} className="flex justify-between py-1">
@@ -82,7 +82,7 @@ export default function Plan() {
                 </span>
               </div>
             ))}
-            <button className="mt-3 bg-slate-900 text-white px-4 py-2 rounded-lg" onClick={() => nav(`/stress/${plan.id}`)}>
+            <button className="mt-3 bg-violet-600 px-4 py-2 rounded-lg" onClick={() => nav(`/stress/${plan.id}`)}>
               Stress-test
             </button>
           </div>
@@ -94,16 +94,16 @@ export default function Plan() {
 
 function Field({ label, value, onChange, type = "text" }: any) {
   return (
-    <label className="block text-sm">
+    <label className="block text-sm text-slate-300">
       {label}
-      <input className="mt-1 w-full border rounded-xl px-3 py-2" type={type} value={value} onChange={(e) => onChange(e.target.value)} />
+      <input className="mt-1 w-full bg-panel border border-line rounded-xl px-3 py-2" type={type} value={value} onChange={(e) => onChange(e.target.value)} />
     </label>
   );
 }
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-white border rounded-2xl p-4">
-      <div className="text-xs text-slate-500">{label}</div>
+    <div className="bg-panel/60 border border-line rounded-2xl p-4">
+      <div className="text-xs text-slate-400">{label}</div>
       <div className="font-display text-xl">{value}</div>
     </div>
   );

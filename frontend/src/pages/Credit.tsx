@@ -19,27 +19,27 @@ export default function Credit() {
 
   const score = kti?.score ?? 0;
   return (
-    <div className="text-slate-900">
+    <div>
       <h1 className="font-display text-3xl">Kredit markazi</h1>
       <div className="grid lg:grid-cols-2 gap-4 mt-4">
-        <div className="bg-white border rounded-2xl p-4 space-y-2">
+        <div className="bg-panel/60 border border-line rounded-2xl p-4 space-y-2">
           <h2 className="font-medium">Kalkulyator</h2>
           {["amount", "rate", "months", "grace", "subsidy"].map((k) => (
-            <label key={k} className="block text-sm">
+            <label key={k} className="block text-sm text-slate-300">
               {k}
               <input
                 type="number"
-                className="w-full border rounded-lg px-2 py-1"
+                className="w-full bg-panel border border-line rounded-lg px-2 py-1"
                 value={(form as any)[k]}
                 onChange={(e) => setForm({ ...form, [k]: Number(e.target.value) })}
               />
             </label>
           ))}
-          <button className="bg-violet-600 text-white px-4 py-2 rounded-lg" onClick={calc}>
+          <button className="bg-violet-600 px-4 py-2 rounded-lg" onClick={calc}>
             Hisoblash
           </button>
           {loan && (
-            <div className="text-sm space-y-1">
+            <div className="text-sm space-y-1 text-slate-300">
               <div>Oylik: {som(loan.monthly_payment)}</div>
               <div>Jami foiz: {som(loan.total_interest)}</div>
               <div>Samarali stavka: {(loan.effective_rate * 100).toFixed(2)}%</div>
@@ -47,21 +47,21 @@ export default function Credit() {
             </div>
           )}
         </div>
-        <div className="bg-white border rounded-2xl p-4">
+        <div className="bg-panel/60 border border-line rounded-2xl p-4">
           <h2 className="font-medium">KTI {score}/100</h2>
-          <div className="h-3 bg-slate-100 rounded-full mt-2">
+          <div className="h-3 bg-white/10 rounded-full mt-2">
             <div className="h-3 bg-violet-600 rounded-full" style={{ width: `${score}%` }} />
           </div>
           <ul className="mt-3 text-sm space-y-1">
             {(kti?.factors || []).map((f: any) => (
-              <li key={f.key} className="flex justify-between">
+              <li key={f.key} className="flex justify-between text-slate-300">
                 <span>{f.label}</span>
                 <span>{f.score}</span>
               </li>
             ))}
           </ul>
           <h3 className="mt-4 font-medium">Indeksni oshirish uchun 3 qadam</h3>
-          <ol className="list-decimal ml-5 text-sm">
+          <ol className="list-decimal ml-5 text-sm text-slate-300">
             {(kti?.recommendations || []).map((r: string) => (
               <li key={r}>{r}</li>
             ))}
@@ -69,9 +69,9 @@ export default function Credit() {
           <p className="text-xs text-slate-500 mt-2">{kti?.disclaimer}</p>
         </div>
       </div>
-      <div className="mt-4 bg-white border rounded-2xl overflow-hidden">
+      <div className="mt-4 bg-panel/60 border border-line rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50">
+          <thead className="bg-black/30 text-slate-400">
             <tr>
               <th className="p-2 text-left">Dastur</th>
               <th className="p-2">Stavka</th>
@@ -81,14 +81,14 @@ export default function Credit() {
           </thead>
           <tbody>
             {programs.map((p) => (
-              <tr key={p.id} className="border-t">
+              <tr key={p.id} className="border-t border-line">
                 <td className="p-2">
                   {p.name}
-                  <div className="text-xs text-violet-600">{p.legal_ref_url}</div>
+                  <div className="text-xs text-violet-400">{p.legal_ref_url}</div>
                 </td>
                 <td className="p-2 text-center">{(p.rate * 100).toFixed(1)}%</td>
                 <td className="p-2 text-center">{som(p.max_amount)}</td>
-                <td className="p-2">{(p.reasons || []).join("; ")}</td>
+                <td className="p-2 text-slate-400">{(p.reasons || []).join("; ")}</td>
               </tr>
             ))}
           </tbody>
