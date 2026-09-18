@@ -9,11 +9,11 @@ export default function Stress() {
   useEffect(() => {
     api(`/api/plans/${id}/stress-test/`, { method: "POST", body: JSON.stringify({ n: 1000 }) }).then(setData);
   }, [id]);
-  if (!data) return <p className="text-slate-400">Hisoblanmoqda…</p>;
+  if (!data) return <p className="text-muted">Hisoblanmoqda…</p>;
   return (
     <div>
       <h1 className="font-display text-3xl">Stress-test</h1>
-      <p className="text-sm text-slate-400">Monte-Karlo, 1 000 ssenariy · manba: M1 volatillik</p>
+      <p className="text-sm text-muted">Monte-Karlo, 1 000 ssenariy · manba: M1 volatillik</p>
       <div className="grid sm:grid-cols-4 gap-3 mt-4">
         <Box label="Zarar ehtimoli" value={`${(data.p_loss * 100).toFixed(1)}%`} />
         <Box label="P10 foyda" value={som(data.p10)} />
@@ -32,14 +32,14 @@ export default function Stress() {
       <p className="mt-3">
         Eng xavfli omil: <b>{data.top_risk_factor}</b>
       </p>
-      <p className="text-xs text-slate-500 mt-2">{data.disclaimer}</p>
+      <p className="text-xs text-muted mt-2">{data.disclaimer}</p>
     </div>
   );
 }
 function Box({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-panel/60 border border-line rounded-2xl p-4">
-      <div className="text-xs text-slate-400">{label}</div>
+      <div className="text-xs text-muted">{label}</div>
       <div className="font-display text-xl">{value}</div>
     </div>
   );

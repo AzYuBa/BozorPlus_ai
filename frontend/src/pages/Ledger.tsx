@@ -22,43 +22,49 @@ export default function Ledger() {
   }
 
   return (
-    <div>
-      <h1 className="font-display text-3xl">Ovozli daftar</h1>
-      <p className="text-slate-400 text-sm">{data?.business} · oy yakuni</p>
-      <div className="grid md:grid-cols-3 gap-3 mt-4">
-        <Stat label="Kirim" value={som(data?.income)} />
-        <Stat label="Chiqim" value={som(data?.expense)} />
+    <div className="bp-page">
+      <h1 className="bp-title">Ovozli daftar</h1>
+      <p className="bp-sub">{data?.business} · oy yakuni</p>
+      <div className="grid md:grid-cols-3 gap-3 mt-5">
+        <Stat label="Kirim" value={som(data?.income)} tone="up" />
+        <Stat label="Chiqim" value={som(data?.expense)} tone="down" />
         <Stat label="Sof" value={som(data?.net)} />
       </div>
-      <div className="h-48 mt-4 bg-panel/60 rounded-2xl border border-line p-2">
+      <div className="h-48 mt-4 bp-panel p-2">
         <ResponsiveContainer>
           <BarChart data={data?.daily || []}>
             <XAxis dataKey="date" hide />
             <YAxis hide />
-            <Tooltip contentStyle={{ background: "#101826", border: "1px solid #1e2a3d" }} />
-            <Bar dataKey="income" fill="#22c55e" />
-            <Bar dataKey="expense" fill="#f43f5e" />
+            <Tooltip contentStyle={{ background: "#ffffff", border: "1px solid #d2ded8", borderRadius: 12 }} />
+            <Bar dataKey="income" fill="#047857" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="expense" fill="#be123c" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
       <form onSubmit={submit} className="mt-4 flex gap-2">
-        <input className="flex-1 bg-panel border border-line rounded-xl px-4 py-3" value={text} onChange={(e) => setText(e.target.value)} />
-        <button className="px-5 rounded-xl bg-violet-600">Yozish</button>
+        <input className="flex-1 bp-input !py-3" value={text} onChange={(e) => setText(e.target.value)} />
+        <button className="bp-btn">Yozish</button>
       </form>
       {pending && (
-        <div className="mt-3 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+        <div className="mt-3 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
           {pending.message}
           <div className="mt-2 flex gap-2">
-            <button className="px-3 py-1 bg-emerald-600 rounded-lg" onClick={() => confirm(true)}>To'g'ri</button>
-            <button className="px-3 py-1 bg-rose-600 rounded-lg" onClick={() => confirm(false)}>Yo'q</button>
+            <button className="bp-btn-teal !px-3 !py-1" onClick={() => confirm(true)}>
+              To'g'ri
+            </button>
+            <button className="bp-btn-ghost !px-3 !py-1 !text-down" onClick={() => confirm(false)}>
+              Yo'q
+            </button>
           </div>
         </div>
       )}
-      <ul className="mt-4 divide-y divide-line bg-panel/60 rounded-2xl border border-line">
+      <ul className="mt-4 divide-y divide-line bp-panel overflow-hidden">
         {(data?.entries || []).slice(0, 12).map((e: any) => (
-          <li key={e.id} className="flex justify-between p-3 text-sm">
-            <span className="text-slate-300">{e.date} · {e.category || e.type}</span>
-            <span className={e.type === "income" ? "text-emerald-400" : "text-rose-400"}>{som(e.amount)}</span>
+          <li key={e.id} className="flex justify-between p-3.5 text-sm">
+            <span className="text-ink/80">
+              {e.date} · {e.category || e.type}
+            </span>
+            <span className={e.type === "income" ? "text-up font-semibold" : "text-down font-semibold"}>{som(e.amount)}</span>
           </li>
         ))}
       </ul>
@@ -66,11 +72,13 @@ export default function Ledger() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value, tone }: { label: string; value: string; tone?: "up" | "down" }) {
   return (
-    <div className="bg-panel/60 border border-line rounded-2xl p-4">
-      <div className="text-xs text-slate-400">{label}</div>
-      <div className="font-display text-xl">{value}</div>
+    <div className="bp-panel p-4">
+      <div className="text-[11px] uppercase tracking-wider text-muted font-semibold">{label}</div>
+      <div className={`font-display text-xl font-bold mt-1 ${tone === "up" ? "text-up" : tone === "down" ? "text-down" : "text-ink"}`}>
+        {value}
+      </div>
     </div>
   );
 }

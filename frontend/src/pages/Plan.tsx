@@ -56,15 +56,15 @@ export default function Plan() {
   }
 
   return (
-    <div>
-      <h1 className="font-display text-3xl">Biznes-reja</h1>
-      <p className="text-slate-400 text-sm">Bitta joyda: reja, risk, kredit, soliq va bank paketi</p>
-      <div className="flex gap-2 mt-4 flex-wrap">
+    <div className="bp-page">
+      <h1 className="bp-title">Biznes-reja</h1>
+      <p className="bp-sub">Reja, risk, kredit, soliq va bank paketi — bir oqimda</p>
+      <div className="flex gap-2 mt-5 flex-wrap">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`px-3 py-1.5 rounded-full text-sm ${tab === t.id ? "bg-violet-600" : "border border-line text-slate-300"}`}
+            className={tab === t.id ? "bp-tab-on" : "bp-tab"}
           >
             {t.label}
           </button>
@@ -77,14 +77,14 @@ export default function Plan() {
             {TEMPLATES.map((tpl) => (
               <button
                 key={tpl.id}
-                className={`px-3 py-1.5 rounded-full text-sm ${form.title === tpl.title ? "bg-violet-600" : "border border-line text-slate-300"}`}
+                className={form.title === tpl.title ? "bp-tab-on" : "bp-tab"}
                 onClick={() => setForm({ ...tpl })}
               >
                 {tpl.title}
               </button>
             ))}
           </div>
-          <div className="bg-panel/60 border border-line rounded-2xl p-5 grid sm:grid-cols-2 gap-3">
+          <div className="bp-panel p-5 grid sm:grid-cols-2 gap-3">
             <Field label="Reja nomi" value={form.title} onChange={(v) => set("title", v)} />
             <Field label="Soha" value={form.sector} onChange={(v) => set("sector", v)} />
             <Field label="Joy" value={form.place} onChange={(v) => set("place", v)} />
@@ -98,7 +98,7 @@ export default function Plan() {
             <Field label="Go'sht, kg/oy" type="number" value={form.gosht} onChange={(v) => set("gosht", Number(v))} />
             <Field label="Piyoz, kg/oy" type="number" value={form.piyoz} onChange={(v) => set("piyoz", Number(v))} />
           </div>
-          <button className="bg-violet-600 px-5 py-2 rounded-xl" disabled={busy} onClick={build}>
+          <button className="bp-btn px-5 py-2 rounded-xl" disabled={busy} onClick={build}>
             {busy ? "Hisoblanmoqda…" : "Hisoblash (narxlar BozorPulsdan)"}
           </button>
           {plan && (
@@ -111,7 +111,7 @@ export default function Plan() {
               <Stat label="Xom ashyo/oy" value={som(plan.outputs?.materials_cost_month)} />
               <Stat label="CAPEX" value={som(plan.outputs?.capex)} />
               <Stat label="OPEX / oy" value={som(plan.outputs?.opex_month)} />
-              <div className="sm:col-span-3 bg-panel/60 border border-line rounded-2xl p-4 text-sm">
+              <div className="sm:col-span-3 bp-panel p-4 text-sm">
                 <div className="font-medium mb-2">Xom ashyo — BozorPuls narxi</div>
                 {Object.entries(plan.price_snapshot || {}).map(([k, v]: any) => (
                   <div key={k} className="flex justify-between py-1">
@@ -122,7 +122,7 @@ export default function Plan() {
                   </div>
                 ))}
                 <div className="flex gap-2 mt-3 flex-wrap">
-                  <button className="bg-violet-600 px-4 py-2 rounded-lg" onClick={() => setTab("stress")}>
+                  <button className="bp-btn px-4 py-2 rounded-lg" onClick={() => setTab("stress")}>
                     Stress-test
                   </button>
                   <button className="border border-line px-4 py-2 rounded-lg" onClick={() => setTab("kredit")}>
@@ -140,7 +140,7 @@ export default function Plan() {
                 <div className="sm:col-span-3 overflow-x-auto border border-line rounded-2xl">
                   <div className="p-3 font-medium text-sm">12 oylik kassa oqimi</div>
                   <table className="w-full text-sm">
-                    <thead className="bg-black/30 text-slate-400">
+                    <thead className="bg-sand text-muted">
                       <tr>
                         <th className="p-2 text-left">Oy</th>
                         <th className="p-2 text-right">Kirim</th>
@@ -158,7 +158,7 @@ export default function Plan() {
                           <td className="p-2 text-right">{som(r.opex)}</td>
                           <td className="p-2 text-right">{som(r.loan)}</td>
                           <td className="p-2 text-right">{som(r.net)}</td>
-                          <td className={`p-2 text-right ${r.gap ? "text-rose-400" : "text-emerald-400"}`}>{som(r.cash)}</td>
+                          <td className={`p-2 text-right ${r.gap ? "text-down" : "text-up"}`}>{som(r.cash)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -181,7 +181,13 @@ export default function Plan() {
       {tab === "stress" && <StressBlock planId={plan?.id} stress={stress} setStress={setStress} />}
       {tab === "kredit" && <CreditBlock amount={form.investment} monthlyIncome={Math.round(yearlyRev / 12)} />}
       {tab === "soliq" && <TaxBlock turnover={yearlyRev} expenses={Math.round(yearlyRev * 0.6)} sector={form.sector} />}
-      {tab === "paket" && <PackageBlock onOpenBank={() => setTab("kredit")} />}
+      {tab === "paket" && (
+        <PackageBlock
+          amount={form.investment}
+          sector={form.sector}
+          onOpenBank={() => setTab("kredit")}
+        />
+      )}
       {tab === "keys" && <CaseStudy />}
     </div>
   );
@@ -198,10 +204,10 @@ function StressBlock({ planId, stress, setStress }: { planId?: number; stress: a
       setBusy(false);
     }
   }
-  if (!planId) return <p className="mt-4 text-slate-400">Avval reja hisoblang.</p>;
+  if (!planId) return <p className="mt-4 text-muted">Avval reja hisoblang.</p>;
   return (
     <div className="mt-4">
-      <button className="bg-violet-600 px-4 py-2 rounded-xl" onClick={run} disabled={busy}>
+      <button className="bp-btn px-4 py-2 rounded-xl" onClick={run} disabled={busy}>
         {busy ? "…" : "1 000 ssenariy ishga tushirish"}
       </button>
       {stress && (
@@ -212,7 +218,7 @@ function StressBlock({ planId, stress, setStress }: { planId?: number; stress: a
             <Stat label="P50" value={som(stress.p50)} />
             <Stat label="P90" value={som(stress.p90)} />
           </div>
-          <div className="mt-4 bg-panel/60 border border-line rounded-2xl p-4 h-56">
+          <div className="mt-4 bp-panel p-4 h-56">
             <ResponsiveContainer>
               <BarChart data={stress.histogram}>
                 <XAxis dataKey="x" hide />
@@ -224,7 +230,7 @@ function StressBlock({ planId, stress, setStress }: { planId?: number; stress: a
           <p className="mt-3 text-sm">
             Eng xavfli omil: <b>{stress.top_risk_factor}</b>
           </p>
-          <p className="text-xs text-slate-500">{stress.disclaimer}</p>
+          <p className="text-xs text-muted">{stress.disclaimer}</p>
         </>
       )}
     </div>
@@ -255,28 +261,28 @@ function CreditBlock({ amount, monthlyIncome }: { amount: number; monthlyIncome:
   const labels: Record<string, string> = { amount: "Summa, so'm", rate: "Stavka %", months: "Muddat, oy", grace: "Imtiyoz, oy", subsidy: "Kompensatsiya %" };
   return (
     <div className="mt-4 grid lg:grid-cols-2 gap-4">
-      <div className="bg-panel/60 border border-line rounded-2xl p-4 space-y-2">
+      <div className="bp-panel p-4 space-y-2">
         <h2 className="font-medium">Smart kredit kalkulyatori</h2>
         {(["amount", "rate", "months", "grace", "subsidy"] as const).map((k) => (
           <Field key={k} label={labels[k]} type="number" value={(form as any)[k]} onChange={(v) => setForm({ ...form, [k]: Number(v) })} />
         ))}
-        <label className="block text-sm text-slate-300">
+        <label className="block text-sm text-ink/80">
           Jadval
-          <select className="mt-1 w-full bg-panel border border-line rounded-xl px-3 py-2" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
+          <select className="mt-1 w-full bp-input px-3 py-2" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
             <option value="annuity">Anuitet</option>
             <option value="differential">Differensial</option>
           </select>
         </label>
-        <button className="bg-violet-600 px-4 py-2 rounded-lg" onClick={calc}>
+        <button className="bp-btn px-4 py-2 rounded-lg" onClick={calc}>
           Hisoblash
         </button>
         {loan && (
-          <div className="text-sm space-y-1 text-slate-300">
+          <div className="text-sm space-y-1 text-ink/80">
             <div>Oylik: {som(loan.monthly_payment)}</div>
             <div>Jami foiz: {som(loan.total_interest)}</div>
             <div>Samarali stavka: {(loan.effective_rate * 100).toFixed(2)}%</div>
             {loan.dti_pct != null && (
-              <div className={loan.dti_ok ? "text-emerald-400" : "text-rose-400"}>
+              <div className={loan.dti_ok ? "text-up" : "text-down"}>
                 DTI {loan.dti_pct}% {loan.dti_ok ? "(40% dan past)" : "(yuqori — bank rad etishi mumkin)"}
               </div>
             )}
@@ -284,29 +290,29 @@ function CreditBlock({ amount, monthlyIncome }: { amount: number; monthlyIncome:
           </div>
         )}
       </div>
-      <div className="bg-panel/60 border border-line rounded-2xl p-4">
+      <div className="bp-panel p-4">
         <h2 className="font-medium">KTI {score}/100</h2>
         <div className="h-3 bg-white/10 rounded-full mt-2">
-          <div className="h-3 bg-violet-600 rounded-full" style={{ width: `${score}%` }} />
+          <div className="h-3 bg-accent rounded-full" style={{ width: `${score}%` }} />
         </div>
         <ul className="mt-3 text-sm space-y-1">
           {(kti?.factors || []).map((f: any) => (
-            <li key={f.key} className="flex justify-between text-slate-300">
+            <li key={f.key} className="flex justify-between text-ink/80">
               <span>{f.label}</span>
               <span>{f.score}</span>
             </li>
           ))}
         </ul>
         <h3 className="mt-4 font-medium">3 qadam</h3>
-        <ol className="list-decimal ml-5 text-sm text-slate-300">
+        <ol className="list-decimal ml-5 text-sm text-ink/80">
           {(kti?.recommendations || []).map((r: string) => (
             <li key={r}>{r}</li>
           ))}
         </ol>
       </div>
-      <div className="lg:col-span-2 bg-panel/60 border border-line rounded-2xl overflow-hidden">
+      <div className="lg:col-span-2 bp-panel overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-black/30 text-slate-400">
+          <thead className="bg-sand text-muted">
             <tr>
               <th className="p-2 text-left">Dastur</th>
               <th className="p-2">Stavka</th>
@@ -319,12 +325,12 @@ function CreditBlock({ amount, monthlyIncome }: { amount: number; monthlyIncome:
               <tr key={p.id} className="border-t border-line">
                 <td className="p-2">
                   {p.name}
-                  <div className="text-xs text-slate-400">{p.provider}</div>
-                  <div className="text-xs text-violet-400">{p.legal_ref_url}</div>
+                  <div className="text-xs text-muted">{p.provider}</div>
+                  <div className="text-xs text-teal">{p.legal_ref_url}</div>
                 </td>
                 <td className="p-2 text-center">{(p.rate * 100).toFixed(1)}%</td>
                 <td className="p-2 text-center">{som(p.max_amount)}</td>
-                <td className="p-2 text-slate-400">{(p.reasons || []).join("; ")}</td>
+                <td className="p-2 text-muted">{(p.reasons || []).join("; ")}</td>
               </tr>
             ))}
           </tbody>
@@ -334,7 +340,7 @@ function CreditBlock({ amount, monthlyIncome }: { amount: number; monthlyIncome:
         <div className="lg:col-span-2 overflow-x-auto border border-line rounded-2xl">
           <div className="p-3 font-medium text-sm">To'lov jadvali (birinchi 12 oy)</div>
           <table className="w-full text-sm">
-            <thead className="bg-black/30 text-slate-400">
+            <thead className="bg-sand text-muted">
               <tr>
                 <th className="p-2 text-left">Oy</th>
                 <th className="p-2 text-right">Asosiy</th>
@@ -385,7 +391,7 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
       <div className="flex gap-2 flex-wrap">
         <Field label="Yillik aylanma" type="number" value={t} onChange={(v) => setT(Number(v))} />
         <Field label="Xarajat" type="number" value={e} onChange={(v) => setE(Number(v))} />
-        <button className="self-end bg-violet-600 px-4 py-2 rounded-xl h-10" onClick={run}>
+        <button className="self-end bg-accent px-4 py-2 rounded-xl h-10" onClick={run}>
           Taqqoslash
         </button>
       </div>
@@ -397,7 +403,7 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
         </div>
       )}
       {tax && (
-        <div className="mt-4 bg-panel/60 border border-line rounded-2xl p-4 h-64">
+        <div className="mt-4 bp-panel p-4 h-64">
           <ResponsiveContainer>
             <BarChart data={tax.rows}>
               <XAxis dataKey="regime" stroke="#94a3b8" />
@@ -413,7 +419,7 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
         {(tax?.rows || []).map((r: any) => (
           <li key={r.regime} className="bg-panel/60 border border-line rounded-xl p-3">
             <b>{r.regime}</b> — {som(r.tax)} · {r.rate}%{" "}
-            <a className="text-violet-400 text-xs" href={r.legal_ref_url} target="_blank">
+            <a className="text-teal text-xs" href={r.legal_ref_url} target="_blank">
               lex.uz
             </a>
           </li>
@@ -422,9 +428,9 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
       {st && (
         <div className="mt-4 grid md:grid-cols-3 gap-3">
           {st.variants.map((v: any) => (
-            <div key={v.status} className="bg-panel/60 border border-line rounded-2xl p-4">
+            <div key={v.status} className="bp-panel p-4">
               <div className="font-medium">{v.label}</div>
-              <div className="text-sm text-slate-300">Soliq {som(v.tax)}</div>
+              <div className="text-sm text-ink/80">Soliq {som(v.tax)}</div>
               <div className="text-sm">Xavf {v.risk} · kredit: {v.credit_access}</div>
             </div>
           ))}
@@ -434,7 +440,7 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
         <div className="mt-4 border border-line rounded-2xl overflow-hidden">
           <div className="p-3 font-medium text-sm">Tadbirkor soliq taqvimi</div>
           <table className="w-full text-sm">
-            <thead className="bg-black/30 text-slate-400">
+            <thead className="bg-sand text-muted">
               <tr>
                 <th className="p-2 text-left">Qachon</th>
                 <th className="p-2 text-left">Nima</th>
@@ -446,7 +452,7 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
                 <tr key={c.title} className="border-t border-line">
                   <td className="p-2">{c.when}</td>
                   <td className="p-2">{c.title}</td>
-                  <td className="p-2 text-rose-300">{c.risk}</td>
+                  <td className="p-2 text-down">{c.risk}</td>
                 </tr>
               ))}
             </tbody>
@@ -457,32 +463,214 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
   );
 }
 
-function PackageBlock({ onOpenBank }: { onOpenBank: () => void }) {
+function PackageBlock({
+  amount,
+  sector,
+  onOpenBank,
+}: {
+  amount: number;
+  sector: string;
+  onOpenBank: () => void;
+}) {
   const qc = useQueryClient();
   const [consent, setConsent] = useState(false);
   const [res, setRes] = useState<any>(null);
+  const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [programs, setPrograms] = useState<any[]>([]);
+  const [bank, setBank] = useState("");
+  const [programId, setProgramId] = useState<number | "">("");
+
+  useEffect(() => {
+    api(`/api/finance/programs/match/?amount=${amount}&sector=${encodeURIComponent(sector || "ovqatlanish")}`)
+      .then((list) => {
+        setPrograms(list || []);
+        if (list?.length) {
+          const preferred =
+            list.find((p: any) => p.provider === "Xalq banki") ||
+            list.find((p: any) => p.eligible) ||
+            list[0];
+          setBank(preferred.provider);
+          setProgramId(preferred.id);
+        }
+      })
+      .catch(() => setPrograms([]));
+  }, [amount, sector]);
+
+  const banks = Array.from(new Set(programs.map((p) => p.provider).filter(Boolean)));
+  const bankPrograms = programs.filter((p) => p.provider === bank);
+  const selected = bankPrograms.find((p) => p.id === programId) || bankPrograms[0] || null;
+
+  useEffect(() => {
+    if (!bank) return;
+    const list = programs.filter((p) => p.provider === bank);
+    if (!list.length) return;
+    if (!list.some((p) => p.id === programId)) {
+      setProgramId(list[0].id);
+    }
+  }, [bank, programs, programId]);
+
   async function send() {
-    const r = await api("/api/credit-package/", { method: "POST", body: JSON.stringify({ consent, send: true }) });
-    setRes(r);
-    qc.invalidateQueries({ queryKey: ["packs"] });
+    setErr("");
+    if (!selected) {
+      setErr("Bank va kredit turini tanlang");
+      return;
+    }
+    if (!consent) {
+      setErr("Bankka yuborish uchun rozilik kerak");
+      return;
+    }
+    setBusy(true);
+    try {
+      const r = await api("/api/credit-package/", {
+        method: "POST",
+        body: JSON.stringify({
+          consent,
+          send: true,
+          program_id: selected.id,
+          bank: selected.provider,
+          program_name: selected.name,
+        }),
+      });
+      setRes(r);
+      qc.invalidateQueries({ queryKey: ["packs"] });
+    } catch (e: any) {
+      setErr(e?.message || "Paket yaratilmadi");
+    } finally {
+      setBusy(false);
+    }
   }
+
   return (
-    <div className="mt-4 max-w-xl bg-panel/60 border border-line rounded-2xl p-5">
-      <p className="text-sm text-slate-400">Reja + KTI. Bankka faqat rozilik bilan yuboriladi.</p>
-      <label className="mt-4 flex items-center gap-2">
-        <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-        Bankka yuborishga roziman
+    <div className="mt-4 max-w-2xl bp-panel p-5 space-y-4">
+      <div>
+        <h2 className="font-display text-xl font-bold">Kredit paketi</h2>
+        <p className="text-sm text-muted mt-1">
+          Avval bank va kredit turini tanlang. Reja + KTI shu dastur uchun yig‘iladi; bankka faqat rozilik bilan
+          yuboriladi.
+        </p>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-3">
+        <label className="block text-sm text-ink/80">
+          Bank
+          <select
+            className="mt-1 w-full bp-input"
+            value={bank}
+            onChange={(e) => setBank(e.target.value)}
+          >
+            <option value="">Tanlang</option>
+            {banks.map((b) => (
+              <option key={b} value={b}>
+                {b}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block text-sm text-ink/80">
+          Kredit turi / dastur
+          <select
+            className="mt-1 w-full bp-input"
+            value={programId === "" ? "" : String(programId)}
+            onChange={(e) => setProgramId(e.target.value ? Number(e.target.value) : "")}
+            disabled={!bank}
+          >
+            <option value="">Tanlang</option>
+            {bankPrograms.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      {selected ? (
+        <div className="rounded-2xl border border-line bg-mist/80 p-4 text-sm space-y-2">
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <div>
+              <div className="text-[11px] uppercase tracking-wider text-muted font-semibold">Tanlangan paket</div>
+              <div className="font-display font-bold text-lg mt-0.5">{selected.provider}</div>
+              <div className="text-ink/80">{selected.name}</div>
+            </div>
+            <span className={`chip ${selected.eligible ? "" : "!border-amber-300 !text-amber-700"}`}>
+              {selected.eligible ? "mos" : "shartli"}
+            </span>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-x-4 gap-y-1 text-ink/80">
+            <div>
+              Stavka: <b>{(selected.rate * 100).toFixed(1)}%</b>
+            </div>
+            <div>
+              Max summa: <b>{som(selected.max_amount)}</b>
+            </div>
+            <div>
+              Muddat: <b>{selected.term_months} oy</b>
+            </div>
+            <div>
+              Imtiyoz: <b>{selected.grace_months || 0} oy</b>
+            </div>
+            {selected.collateral && (
+              <div className="sm:col-span-2">
+                Garov: <b>{selected.collateral}</b>
+              </div>
+            )}
+          </div>
+          {(selected.reasons || []).length > 0 && (
+            <p className="text-xs text-muted">{(selected.reasons || []).join(" · ")}</p>
+          )}
+          {selected.legal_ref_url && (
+            <a className="bp-link text-xs" href={selected.legal_ref_url} target="_blank" rel="noreferrer">
+              Huquqiy manba
+            </a>
+          )}
+          <button type="button" className="bp-link text-xs" onClick={onOpenBank}>
+            Kredit markazida dasturlarni ko‘rish
+          </button>
+        </div>
+      ) : (
+        <p className="text-sm text-muted">Dasturlar yuklanmoqda yoki topilmadi…</p>
+      )}
+
+      <label className="flex items-start gap-2 text-sm">
+        <input
+          type="checkbox"
+          className="mt-1"
+          checked={consent}
+          onChange={(e) => setConsent(e.target.checked)}
+        />
+        <span>
+          <b>{selected?.provider || "Tanlangan bank"}</b>
+          {selected ? ` — «${selected.name}»` : ""} dasturiga moliyaviy ma'lumotlarimni yuborishga roziman.
+        </span>
       </label>
-      <button className="mt-4 bg-violet-600 px-4 py-2 rounded-lg" onClick={send}>
-        Paket yaratish
+
+      {err && <p className="text-sm text-down">{err}</p>}
+
+      <button className="bp-btn" disabled={busy || !selected} onClick={send}>
+        {busy ? "…" : "Paket yaratish"}
       </button>
+
       {res && (
-        <div className="mt-4 text-sm space-y-1">
+        <div className="text-sm space-y-1 border-t border-line pt-4">
+          <div className="font-medium text-up">Paket yaratildi</div>
+          <div>
+            Bank: <b>{res.summary?.bank || res.bank}</b>
+          </div>
+          <div>
+            Kredit turi: <b>{res.summary?.program_name || res.program_name}</b>
+          </div>
+          {res.summary?.loan && (
+            <div className="text-muted text-xs">
+              {(res.summary.loan.rate * 100).toFixed(1)}% · {res.summary.loan.term_months} oy · max{" "}
+              {som(res.summary.loan.max_amount)}
+            </div>
+          )}
           <div>KTI: {res.summary?.kti}</div>
           <div>NPV: {som(res.summary?.npv)}</div>
-          <div>Bank: {res.bank_inbox ? "yuborildi" : "yo'q"}</div>
+          <div>Bank paneli: {res.bank_inbox ? "yuborildi" : "yo'q"}</div>
           {res.bank_inbox && (
-            <button className="mt-2 border border-line px-3 py-1.5 rounded-lg" onClick={onOpenBank}>
+            <button className="mt-2 bp-btn-ghost !px-3 !py-1.5" onClick={onOpenBank}>
               Bank panelini ochish
             </button>
           )}
@@ -494,16 +682,16 @@ function PackageBlock({ onOpenBank }: { onOpenBank: () => void }) {
 
 function Field({ label, value, onChange, type = "text" }: any) {
   return (
-    <label className="block text-sm text-slate-300">
+    <label className="block text-sm text-ink/80">
       {label}
-      <input className="mt-1 w-full bg-panel border border-line rounded-xl px-3 py-2" type={type} value={value} onChange={(e) => onChange(e.target.value)} />
+      <input className="mt-1 w-full bp-input px-3 py-2" type={type} value={value} onChange={(e) => onChange(e.target.value)} />
     </label>
   );
 }
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-panel/60 border border-line rounded-2xl p-4">
-      <div className="text-xs text-slate-400">{label}</div>
+    <div className="bp-panel p-4">
+      <div className="text-xs text-muted">{label}</div>
       <div className="font-display text-xl">{value}</div>
     </div>
   );
@@ -511,9 +699,9 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function SwotBox({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="bg-panel/60 border border-line rounded-2xl p-4">
+    <div className="bp-panel p-4">
       <div className="font-medium mb-2">{title}</div>
-      <ul className="list-disc ml-4 text-slate-300 space-y-1">
+      <ul className="list-disc ml-4 text-ink/80 space-y-1">
         {(items || []).map((x) => (
           <li key={x}>{x}</li>
         ))}
@@ -524,8 +712,8 @@ function SwotBox({ title, items }: { title: string; items: string[] }) {
 
 function CaseStudy() {
   return (
-    <div className="mt-4 space-y-4 text-sm text-slate-300">
-      <div className="bg-panel/60 border border-line rounded-2xl p-5">
+    <div className="mt-4 space-y-4 text-sm text-ink/80">
+      <div className="bp-panel p-5">
         <h2 className="font-display text-2xl text-white">Alisher aka · Samarqand</h2>
         <p className="mt-2">
           Novvoyxona ochmoqchi. BozorPuls Qo'yliqda unni arzon topadi, 14 kunlik prognoz «HOZIR OL» beradi, tannarx shu narxga
@@ -542,9 +730,9 @@ function CaseStudy() {
           ["5", "Matchmaking", "Partiya + shartnoma"],
         ].map(([n, t, d]) => (
           <div key={n} className="border border-line rounded-2xl p-3 bg-panel/60">
-            <div className="text-violet-400 text-xs">Qatlam {n}</div>
+            <div className="text-teal text-xs">Qatlam {n}</div>
             <div className="font-medium text-white">{t}</div>
-            <div className="text-xs text-slate-400">{d}</div>
+            <div className="text-xs text-muted">{d}</div>
           </div>
         ))}
       </div>

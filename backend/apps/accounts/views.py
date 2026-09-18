@@ -114,6 +114,35 @@ def demo_login(request):
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
+def login(request):
+    login_id = (
+        request.data.get("phone")
+        or request.data.get("username")
+        or request.data.get("login")
+        or ""
+    ).strip()
+    password = request.data.get("password") or ""
+    if not login_id or not password:
+        return Response({"detail": "Telefon yoki login va parol kerak"}, status=400)
+
+    user = None
+    phone_matches = list(User.objects.filter(phone=login_id).exclude(phone=""))
+    if len(phone_matches) == 1:
+        user = phone_matches[0]
+    elif len(phone_matches) > 1:
+        for candidate in phone_matches:
+            if candidate.check_password(password):
+                user = candidate
+                break
+    if user is None:
+        user = User.objects.filter(username=login_id).first()
+    if user is None or not user.check_password(password):
+        return Response({"detail": "Telefon/login yoki parol noto'g'ri"}, status=400)
+    return Response(tokens_for(user))
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
 def register(request):
     from django.utils import timezone
 
@@ -128,6 +157,14 @@ def register(request):
     name = (request.data.get("first_name") or request.data.get("name") or "").strip()
     lang = request.data.get("lang") or "uz"
     phone = (request.data.get("phone") or "").strip()
+    password = request.data.get("password") or ""
+    if not phone:
+        return Response({"detail": "Telefon raqam kerak — profilga kirish uchun"}, status=400)
+    if len(password) < 4:
+        return Response({"detail": "Parol kamida 4 belgidan iborat bo'lsin"}, status=400)
+    if User.objects.filter(phone=phone).exclude(phone="").exists():
+        return Response({"detail": "Bu telefon allaqachon ro'yxatdan o'tgan"}, status=400)
+
     district = None
     slug = request.data.get("district") or request.data.get("district_slug")
     if slug:
@@ -161,7 +198,7 @@ def register(request):
         stir=stir,
         consent_at=timezone.now(),
     )
-    user.set_password(request.data.get("password") or "bozorpuls")
+    user.set_password(password)
     user.save()
 
     if role == User.Role.ENTREPRENEUR:
@@ -208,7 +245,58 @@ def telegram_login(request):
     return Response(tokens_for(user), status=status.HTTP_201_CREATED if created else 200)
 
 
-@api_view(["GET"])
+@api_view(["GET", "PATCH", "DELETE"])
 @permission_classes([IsAuthenticated])
 def me(request):
-    return Response(UserSerializer(request.user).data)
+    from apps.markets.models import District, Market
+
+    user = request.user
+    if request.method == "GET":
+        return Response(UserSerializer(user).data)
+
+    if request.method == "DELETE":
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    data = request.data
+    if "first_name" in data:
+        user.first_name = str(data.get("first_name") or "").strip()[:150]
+    if "phone" in data:
+        user.phone = str(data.get("phone") or "").strip()[:32]
+    if "lang" in data and data.get("lang") in ("uz", "ru"):
+        user.lang = data["lang"]
+    if "gender" in data:
+        gender = str(data.get("gender") or "").strip()
+        user.gender = gender if gender in User.Gender.values else ""
+    if "birth_year" in data:
+        user.birth_year = _int_or_none(data.get("birth_year"), 1940, 2015)
+    if "stir" in data:
+        user.stir = str(data.get("stir") or "").strip()[:14]
+    if "district" in data or "district_slug" in data:
+        slug = data.get("district") or data.get("district_slug")
+        user.district = District.objects.filter(slug=slug).first() if slug else None
+    if "market" in data or "market_slug" in data:
+        mslug = data.get("market") or data.get("market_slug")
+        user.market = Market.objects.filter(slug=mslug).first() if mslug else None
+    user.save()
+
+    if user.role == User.Role.ENTREPRENEUR:
+        biz = user.businesses.first()
+        if biz:
+            if "business_name" in data:
+                name = str(data.get("business_name") or "").strip()
+                if name:
+                    biz.name = name
+            if "sector" in data:
+                biz.sector = str(data.get("sector") or "").strip()
+            if "legal_status" in data and data.get("legal_status") in Business.LegalStatus.values:
+                biz.legal_status = data["legal_status"]
+            if "tax_regime" in data:
+                biz.tax_regime = str(data.get("tax_regime") or "").strip()
+            if "employees" in data:
+                biz.employees = _int_or_none(data.get("employees"), 0) or 0
+            if "monthly_revenue" in data:
+                biz.monthly_revenue = _int_or_none(data.get("monthly_revenue"), 0) or 0
+            biz.save()
+
+    return Response(UserSerializer(user).data)

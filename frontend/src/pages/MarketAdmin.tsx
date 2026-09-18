@@ -41,7 +41,7 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
       <div className="flex items-end justify-between gap-3 flex-wrap">
         <div>
           <h2 className="font-display text-2xl">Bozor paneli</h2>
-          <p className="text-slate-400 text-sm">Viloyat va bozor kesimida barcha mahsulot narxlari — sotuvchi shaxsi ko'rinmaydi.</p>
+          <p className="text-muted text-sm">Viloyat va bozor kesimida barcha mahsulot narxlari — sotuvchi shaxsi ko'rinmaydi.</p>
         </div>
         <button
           className="border border-line px-3 py-1.5 rounded-lg text-sm"
@@ -55,7 +55,7 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
         {SLICES.map((s) => (
           <button
             key={s.id}
-            className={`px-3 py-1.5 rounded-full text-sm ${slice === s.id ? "bg-violet-600" : "border border-line text-slate-300"}`}
+            className={slice === s.id ? "bp-tab-on" : "bp-tab"}
             onClick={() => setSlice(s.id)}
           >
             {s.label}
@@ -71,20 +71,20 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
             <Box label="Spekulyatsiya" value={(data?.speculation_alerts || []).length} />
           </div>
           {report && (
-            <div className="mt-4 border border-line rounded-2xl p-4 bg-panel/60 text-sm">
+            <div className="mt-4 bp-panel p-4 text-sm">
               <div className="font-medium">{report.title}</div>
-              <p className="text-slate-300 mt-1">{report.summary}</p>
+              <p className="text-ink/80 mt-1">{report.summary}</p>
               <span className="chip mt-2 inline-block">{report.source}</span>
             </div>
           )}
           {(data?.speculation_alerts || []).length > 0 && (
             <div className="mt-4 border border-rose-500/30 bg-rose-500/10 rounded-2xl p-4">
-              <div className="text-sm text-rose-300 mb-2">Spekulyatsiya ogohlantirishlari (≥15%)</div>
+              <div className="text-sm text-down mb-2">Spekulyatsiya ogohlantirishlari (≥15%)</div>
               <ul className="space-y-1 text-sm">
                 {data.speculation_alerts.map((s: any) => (
                   <li key={s.slug || s.product} className="flex justify-between">
                     <span>{s.product}</span>
-                    <span className="text-rose-400">+{s.change_pct}%</span>
+                    <span className="text-down">+{s.change_pct}%</span>
                   </li>
                 ))}
               </ul>
@@ -94,34 +94,34 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
             {(data?.social || []).map((s: any) => (
               <li key={s.slug || s.product}>
                 <button
-                  className="w-full flex justify-between border border-line rounded-xl p-3 hover:bg-white/5"
+                  className="w-full flex justify-between border border-line rounded-xl p-3 hover:bg-sand"
                   onClick={() => s.slug && onPick?.(s.slug)}
                   disabled={!onPick || !s.slug}
                 >
                   <span>{s.product}</span>
-                  <span className={s.change_pct > 0 ? "text-rose-400" : "text-emerald-400"}>
+                  <span className={s.change_pct > 0 ? "text-down" : "text-up"}>
                     {som(s.price)} · {s.change_pct}%
                   </span>
                 </button>
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-xs text-slate-500">{data?.source}</p>
+          <p className="mt-3 text-xs text-muted">{data?.source}</p>
         </>
       )}
 
       {slice === "viloyat" && (
         <div className="mt-4">
-          {isLoading && <p className="text-sm text-slate-400">Viloyat narxlari yuklanmoqda…</p>}
+          {isLoading && <p className="text-sm text-muted">Viloyat narxlari yuklanmoqda…</p>}
           <div className="flex gap-2 flex-wrap">
             {regions.map((r: any) => (
               <button
                 key={r.slug}
-                className={`px-3 py-1.5 rounded-full text-sm ${region?.slug === r.slug ? "bg-violet-600" : "border border-line text-slate-300"}`}
+                className={region?.slug === r.slug ? "bp-tab-on" : "bp-tab"}
                 onClick={() => setRegionSlug(r.slug)}
               >
                 {r.name}
-                <span className="ml-1 text-[10px] text-slate-300">{r.product_count}</span>
+                <span className="ml-1 text-[10px] text-ink/80">{r.product_count}</span>
               </button>
             ))}
           </div>
@@ -130,7 +130,7 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
               <div className="flex items-end justify-between gap-3 mt-4 flex-wrap">
                 <div>
                   <div className="font-display text-xl">{region.name}</div>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted">
                     {region.market_count} bozor · {region.product_count} mahsulot · o'rtacha narx
                   </p>
                 </div>
@@ -140,18 +140,18 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
                 products={filterProducts(region.products, q)}
                 onPick={onPick}
                 extra={(p) => (
-                  <span className="text-slate-500 text-xs">
+                  <span className="text-muted text-xs">
                     {som(p.min)}–{som(p.max)} · {p.markets} bozor
                   </span>
                 )}
               />
               <div className="mt-4">
-                <div className="text-xs text-slate-500 mb-2">Viloyatdagi bozorlar</div>
+                <div className="text-xs text-muted mb-2">Viloyatdagi bozorlar</div>
                 <div className="flex gap-2 flex-wrap">
                   {region.markets.map((m: any) => (
                     <button
                       key={m.slug}
-                      className="border border-line rounded-xl px-3 py-2 text-sm hover:bg-white/5"
+                      className="border border-line rounded-xl px-3 py-2 text-sm hover:bg-sand"
                       onClick={() => {
                         setRegionSlug(region.slug);
                         setMarketSlug(m.slug);
@@ -159,7 +159,7 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
                       }}
                     >
                       <div>{m.name}</div>
-                      <div className="text-[10px] text-slate-500">
+                      <div className="text-[10px] text-muted">
                         {m.district} · {m.products.length} mahsulot
                       </div>
                     </button>
@@ -173,12 +173,12 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
 
       {slice === "bozor" && (
         <div className="mt-4">
-          {isLoading && <p className="text-sm text-slate-400">Bozor narxlari yuklanmoqda…</p>}
+          {isLoading && <p className="text-sm text-muted">Bozor narxlari yuklanmoqda…</p>}
           <div className="flex gap-2 flex-wrap">
             {regions.map((r: any) => (
               <button
                 key={r.slug}
-                className={`px-3 py-1.5 rounded-full text-sm ${region?.slug === r.slug ? "bg-violet-600" : "border border-line text-slate-300"}`}
+                className={region?.slug === r.slug ? "bp-tab-on" : "bp-tab"}
                 onClick={() => {
                   setRegionSlug(r.slug);
                   setMarketSlug(r.markets?.[0]?.slug || "");
@@ -192,7 +192,7 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
             {(region?.markets || []).map((m: any) => (
               <button
                 key={m.slug}
-                className={`px-3 py-1.5 rounded-full text-sm ${market?.slug === m.slug ? "bg-violet-600" : "border border-line text-slate-300"}`}
+                className={market?.slug === m.slug ? "bp-tab-on" : "bp-tab"}
                 onClick={() => setMarketSlug(m.slug)}
               >
                 {m.name}
@@ -204,7 +204,7 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
               <div className="flex items-end justify-between gap-3 mt-4 flex-wrap">
                 <div>
                   <div className="font-display text-xl">{market.name}</div>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted">
                     {region?.name} · {market.district} · {market.type} · {market.products.length} mahsulot
                   </p>
                 </div>
@@ -216,7 +216,7 @@ export function MarketPanel({ onPick }: { onPick?: (slug: string) => void }) {
         </div>
       )}
 
-      {slice !== "umumiy" && <p className="mt-3 text-xs text-slate-500">{matrix?.source}</p>}
+      {slice !== "umumiy" && <p className="mt-3 text-xs text-muted">{matrix?.source}</p>}
     </div>
   );
 }
@@ -258,25 +258,25 @@ function ProductTable({
   }, [products]);
 
   if (!products.length) {
-    return <p className="mt-4 text-sm text-slate-500">Bu kesimda narx topilmadi.</p>;
+    return <p className="mt-4 text-sm text-muted">Bu kesimda narx topilmadi.</p>;
   }
 
   return (
     <div className="mt-3 space-y-4">
       {groups.map(([cat, rows]) => (
         <div key={cat}>
-          <div className="text-[10px] uppercase tracking-wide text-slate-500 mb-1">{cat}</div>
+          <div className="text-[10px] uppercase tracking-wide text-muted mb-1">{cat}</div>
           <ul className="space-y-1">
             {rows.map((p) => (
               <li key={p.slug}>
                 <button
-                  className="w-full flex items-center justify-between gap-3 border border-line rounded-xl px-3 py-2.5 hover:bg-white/5 text-left"
+                  className="w-full flex items-center justify-between gap-3 border border-line rounded-xl px-3 py-2.5 hover:bg-sand text-left"
                   onClick={() => onPick?.(p.slug)}
                   disabled={!onPick}
                 >
                   <span>
                     <span className="block">{p.name}</span>
-                    <span className="text-[10px] text-slate-500">1 {p.unit}</span>
+                    <span className="text-[10px] text-muted">1 {p.unit}</span>
                   </span>
                   <span className="text-right shrink-0">
                     <span className="block">{som(p.price)}</span>
@@ -297,16 +297,16 @@ function ProductTable({
 }
 
 function chgClass(pct: number) {
-  if (pct > 0) return "text-rose-400 text-xs";
-  if (pct < 0) return "text-emerald-400 text-xs";
-  return "text-slate-500 text-xs";
+  if (pct > 0) return "text-down text-xs";
+  if (pct < 0) return "text-up text-xs";
+  return "text-muted text-xs";
 }
 
 function Box({ label, value }: { label: string; value?: number }) {
   return (
-    <div className="border border-line rounded-2xl p-4 bg-panel/60">
-      <div className="text-xs text-slate-400">{label}</div>
-      <div className="font-display text-2xl">{value ?? "—"}</div>
+    <div className="bp-panel p-4">
+      <div className="text-[11px] uppercase tracking-wider text-muted font-semibold">{label}</div>
+      <div className="font-display text-2xl font-bold mt-1">{value ?? "—"}</div>
     </div>
   );
 }

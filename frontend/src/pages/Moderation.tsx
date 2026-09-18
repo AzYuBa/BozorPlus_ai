@@ -11,7 +11,7 @@ export default function Moderation() {
   return (
     <div>
       <h1 className="font-display text-3xl">Moderatsiya navbati</h1>
-      <p className="text-slate-400 text-sm">MAD z-skor &gt; 3.5 yoki past ishonch.</p>
+      <p className="text-muted text-sm">MAD z-skor &gt; 3.5 yoki past ishonch.</p>
       <div className="mt-4 space-y-2">
         {(data || []).map((o: any) => (
           <div key={o.id} className="border border-line rounded-2xl p-4 flex justify-between gap-3">
@@ -19,7 +19,7 @@ export default function Moderation() {
               <div className="font-medium">
                 {o.product} · {o.market}
               </div>
-              <div className="text-sm text-slate-400">{o.raw_text}</div>
+              <div className="text-sm text-muted">{o.raw_text}</div>
               <div className="text-xs">z={Number(o.z).toFixed(2)} · {som(o.price)}</div>
             </div>
             <div className="flex gap-2">
@@ -32,7 +32,7 @@ export default function Moderation() {
             </div>
           </div>
         ))}
-        {(!data || data.length === 0) && <p className="text-slate-500">Navbat bo'sh.</p>}
+        {(!data || data.length === 0) && <p className="text-muted">Navbat bo'sh.</p>}
       </div>
     </div>
   );

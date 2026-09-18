@@ -9,12 +9,28 @@ export function setAuth(data: { access: string; user: unknown }) {
   localStorage.setItem("bp_user", JSON.stringify(data.user));
 }
 
+export function clearAuth() {
+  const u = currentUser();
+  if (u?.id != null) localStorage.removeItem(`bp_avatar_${u.id}`);
+  localStorage.removeItem("bp_token");
+  localStorage.removeItem("bp_user");
+}
+
 export function currentUser() {
   try {
     return JSON.parse(localStorage.getItem("bp_user") || "null");
   } catch {
     return null;
   }
+}
+
+export function getAvatar(userId?: number | string | null) {
+  if (userId == null) return "";
+  return localStorage.getItem(`bp_avatar_${userId}`) || "";
+}
+
+export function setAvatar(userId: number | string, dataUrl: string) {
+  localStorage.setItem(`bp_avatar_${userId}`, dataUrl);
 }
 
 export function homeFor(role?: string) {

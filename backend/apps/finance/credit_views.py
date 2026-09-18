@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from apps.ledger.models import Business, LedgerEntry
-from .models import BusinessPlan, CreditPackage, CreditReadiness, StressTestRun
+from .models import BusinessPlan, CreditPackage, CreditReadiness, LoanProgram, StressTestRun
 from .planning import credit_readiness_score
 
 
@@ -86,12 +86,46 @@ def credit_package(request):
     send = bool(request.data.get("send"))
     if send and not consent:
         return Response({"detail": "Rozilik belgilanmasa yuborilmaydi"}, status=400)
+
+    program = None
+    program_id = request.data.get("program_id")
+    bank_name = (request.data.get("bank") or request.data.get("provider") or "").strip()
+    program_name = (request.data.get("program_name") or "").strip()
+    if program_id:
+        program = LoanProgram.objects.filter(pk=program_id, is_active=True).first()
+    if program is None and program_name:
+        program = LoanProgram.objects.filter(name=program_name, is_active=True).first()
+    if program is None and bank_name:
+        program = LoanProgram.objects.filter(provider=bank_name, is_active=True).order_by("rate").first()
+    if send and program is None:
+        return Response({"detail": "Bank va kredit turini tanlang"}, status=400)
+
+    bank_info = None
+    if program:
+        bank_info = {
+            "program_id": program.id,
+            "program_name": program.name,
+            "bank": program.provider,
+            "rate": float(program.rate),
+            "max_amount": program.max_amount,
+            "term_months": program.term_months,
+            "grace_months": program.grace_months,
+            "collateral": program.collateral,
+            "legal_ref_url": program.legal_ref_url,
+        }
+        bank_name = program.provider
+        program_name = program.name
+
     summary = {
         "kti": kti["score"],
         "plan_id": plan.id if plan else None,
         "npv": (plan.outputs or {}).get("npv") if plan else None,
         "payback": (plan.outputs or {}).get("payback_months") if plan else None,
         "disclaimer": kti.get("disclaimer"),
+        "bank": bank_name,
+        "program_name": program_name,
+        "program_id": program.id if program else None,
+        "loan": bank_info,
     }
     pack = CreditPackage.objects.create(
         business=biz,
@@ -109,5 +143,7 @@ def credit_package(request):
             "sent_to_bank_at": pack.sent_to_bank_at,
             "bank_inbox": bool(pack.sent_to_bank_at),
             "source": "kredit paketi",
+            "bank": bank_name,
+            "program_name": program_name,
         }
     )

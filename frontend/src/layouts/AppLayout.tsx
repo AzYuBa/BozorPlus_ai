@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { currentUser, navFor } from "../lib/api";
+import { clearAuth, currentUser, navFor } from "../lib/api";
 
 export default function AppLayout() {
   const nav = useNavigate();
@@ -7,37 +7,41 @@ export default function AppLayout() {
   const user = currentUser();
   const items = navFor(user?.role);
   const roleLabel = user?.role === "buyer" ? "Xaridor" : user?.role === "entrepreneur" ? "Tadbirkor" : user?.role;
+  const initial = (user?.first_name || user?.username || "?").slice(0, 1).toUpperCase();
 
   return (
-    <div className="min-h-screen flex text-slate-100">
-      <aside className="w-60 shrink-0 hidden md:flex flex-col border-r bg-panel/80 border-line">
-        <div className="px-5 py-5">
-          <div className="font-display text-xl tracking-wide text-violet-400">BozorPuls</div>
-          <div className="text-[11px] text-slate-500">
+    <div className="min-h-screen flex text-ink">
+      <aside className="w-64 shrink-0 hidden md:flex flex-col border-r border-line bg-panel/80 backdrop-blur-md">
+        <div className="px-5 py-6">
+          <div className="font-display text-2xl font-extrabold tracking-tight">
+            Bozor<span className="text-accent">Puls</span>
+          </div>
+          <div className="text-[11px] text-muted mt-1 tracking-wide">
             {user?.role === "buyer" ? "Arzon narx va xarid" : "Moliyaviy hamroh"}
           </div>
         </div>
         <nav className="flex-1 px-3 space-y-1">
           {items.map((it) => (
-            <NavLink
-              key={it.to}
-              to={it.to}
-              className={({ isActive }) =>
-                `block rounded-lg px-3 py-2 text-sm ${
-                  isActive ? "bg-violet-600 text-white" : "text-slate-300 hover:bg-white/5"
-                }`
-              }
-            >
+            <NavLink key={it.to} to={it.to} className={({ isActive }) => (isActive ? "bp-nav-on" : "bp-nav")}>
               {it.label}
             </NavLink>
           ))}
         </nav>
-        <div className="p-4 text-xs text-slate-500">
-          {user ? `${user.first_name || user.username} · ${roleLabel}` : "mehmon"}
+        <div className="p-4 m-3 rounded-2xl bg-sand/80 border border-line">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-teal text-white flex items-center justify-center font-display font-bold text-sm">
+              {initial}
+            </div>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold truncate">{user?.first_name || user?.username || "mehmon"}</div>
+              <div className="text-[11px] text-muted">{roleLabel}</div>
+            </div>
+          </div>
           <button
-            className="block mt-2 text-violet-400"
+            type="button"
+            className="mt-3 text-xs font-medium text-accent hover:underline"
             onClick={() => {
-              localStorage.clear();
+              clearAuth();
               nav("/");
             }}
           >
@@ -45,11 +49,14 @@ export default function AppLayout() {
           </button>
         </div>
       </aside>
-      <div className="flex-1 min-w-0">
-        <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-line">
-          <span className="font-display text-lg">BozorPuls</span>
+
+      <div className="flex-1 min-w-0 flex flex-col">
+        <header className="md:hidden sticky top-0 z-20 flex items-center justify-between gap-3 px-4 py-3 border-b border-line bg-panel/90 backdrop-blur-md">
+          <span className="font-display text-lg font-bold">
+            Bozor<span className="text-accent">Puls</span>
+          </span>
           <select
-            className="bg-panel border border-line rounded-lg px-2 py-1 text-sm"
+            className="bp-input !py-1.5 !w-auto max-w-[55%] text-sm"
             onChange={(e) => nav(e.target.value)}
             value={items.some((i) => i.to === loc.pathname) ? loc.pathname : items[0]?.to}
           >
@@ -60,7 +67,7 @@ export default function AppLayout() {
             ))}
           </select>
         </header>
-        <main className="p-4 md:p-6 max-w-6xl mx-auto w-full">
+        <main className="p-4 md:p-8 max-w-6xl mx-auto w-full flex-1">
           <Outlet />
         </main>
       </div>

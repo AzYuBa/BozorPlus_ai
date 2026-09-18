@@ -121,15 +121,15 @@ export default function Agent() {
   }
 
   return (
-    <div className="max-w-3xl">
-      <h1 className="font-display text-3xl">AI chat</h1>
-      <p className="text-slate-400 text-sm mt-1">Xorazmiy · matn, ovoz va rasm · buyruq tegishli bo‘limga yoziladi</p>
+    <div className="max-w-3xl bp-page">
+      <h1 className="bp-title">AI chat</h1>
+      <p className="bp-sub">Xorazmiy · matn, ovoz va rasm · buyruq tegishli bo‘limga yoziladi</p>
 
-      <div className="flex gap-2 mt-4 flex-wrap">
+      <div className="flex gap-2 mt-5 flex-wrap">
         {HINTS.map((h) => (
           <button
             key={h.label}
-            className="px-3 py-1.5 rounded-full text-sm border border-line text-slate-300 hover:bg-white/5"
+            className="bp-tab"
             onClick={() => sendPayload(h.q)}
           >
             {h.label}
@@ -137,33 +137,33 @@ export default function Agent() {
         ))}
       </div>
 
-      <div className="mt-4 bg-panel/60 border border-line rounded-2xl p-4 md:p-5 space-y-3 min-h-[52vh] max-h-[60vh] overflow-y-auto">
+      <div className="mt-5 bp-panel p-4 md:p-5 space-y-3 min-h-[52vh] max-h-[60vh] overflow-y-auto">
         {msgs.map((m, i) => (
           <Bubble key={i} m={m} canPlan={canPlan} onOpen={(r) => nav(r)} />
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-black/20 border border-line rounded-2xl px-4 py-2 text-sm text-slate-400">Yozilmoqda…</div>
+            <div className="bg-sand border border-line rounded-2xl px-4 py-2 text-sm text-muted">Yozilmoqda…</div>
           </div>
         )}
         <div ref={endRef} />
       </div>
 
-      <form onSubmit={onSubmit} className="mt-4 bg-panel/60 border border-line rounded-2xl p-3 space-y-2">
+      <form onSubmit={onSubmit} className="mt-4 bp-panel p-3 space-y-2">
         {image && (
           <div className="flex items-center gap-2 text-sm">
             <img src={preview} alt="" className="h-12 w-12 object-cover rounded-xl border border-line" />
-            <span className="text-slate-400 truncate">{image.name}</span>
-            <button type="button" className="text-rose-300 text-xs" onClick={() => setImage(null)}>
+            <span className="text-muted truncate">{image.name}</span>
+            <button type="button" className="text-down text-xs" onClick={() => setImage(null)}>
               Olib tashlash
             </button>
           </div>
         )}
-        {recording && <p className="text-xs text-rose-300">Ovoz yozilmoqda… yana bosing</p>}
+        {recording && <p className="text-xs text-down">Ovoz yozilmoqda… yana bosing</p>}
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => setImage(e.target.files?.[0] || null)} />
         <div className="flex gap-2">
           <textarea
-            className="flex-1 bg-panel border border-line rounded-xl px-4 py-3 min-h-[52px] resize-none"
+            className="flex-1 bp-input min-h-[52px] resize-none"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={(e) => {
@@ -177,13 +177,13 @@ export default function Agent() {
           />
         </div>
         <div className="flex gap-2">
-          <button type="button" className="px-4 py-2 rounded-xl border border-line text-sm" onClick={() => fileRef.current?.click()}>
+          <button type="button" className="bp-btn-ghost text-sm" onClick={() => fileRef.current?.click()}>
             Rasm
           </button>
-          <button type="button" className={`px-4 py-2 rounded-xl border text-sm ${recording ? "bg-rose-600 border-rose-600" : "border-line"}`} onClick={toggleVoice}>
+          <button type="button" className={`bp-btn-ghost text-sm ${recording ? "!bg-down !text-white !border-down" : ""}`} onClick={toggleVoice}>
             {recording ? "To‘xta" : "Ovoz"}
           </button>
-          <button className="ml-auto px-5 py-2 rounded-xl bg-violet-600 text-sm" disabled={loading}>
+          <button className="bp-btn ml-auto text-sm" disabled={loading}>
             {loading ? "…" : "Yuborish"}
           </button>
         </div>
@@ -201,24 +201,24 @@ function Bubble({ m, canPlan, onOpen }: { m: Msg; canPlan: boolean; onOpen: (r: 
       <div className="max-w-[85%]">
         <div
           className={`px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap rounded-2xl ${
-            mine ? "bg-violet-600 text-white" : "bg-black/20 border border-line"
+            mine ? "bg-ink text-mist" : "bg-sand border border-line"
           }`}
         >
           {m.image && <img src={m.image} alt="" className="mb-2 max-h-40 rounded-xl" />}
           {m.text}
         </div>
-        {m.data?.transcript && <p className="mt-1 text-xs text-slate-500">Ovoz: {m.data.transcript}</p>}
+        {m.data?.transcript && <p className="mt-1 text-xs text-muted">Ovoz: {m.data.transcript}</p>}
         {offers && (
           <div className="mt-2 space-y-2">
             {offers.map((o: any) => (
-              <div key={o.rank} className="rounded-xl border border-line bg-black/20 p-3 text-sm">
+              <div key={o.rank} className="rounded-xl border border-line bg-sand p-3 text-sm">
                 <div className="flex justify-between gap-3">
                   <span className="font-medium">
                     #{o.rank} {o.supplier}
                   </span>
-                  <span className="text-emerald-400">{som(o.total)}</span>
+                  <span className="text-up">{som(o.total)}</span>
                 </div>
-                <div className="text-xs text-slate-400">
+                <div className="text-xs text-muted">
                   {o.market} · tovar {som(o.goods)} + yetkazish {som(o.delivery)}
                 </div>
               </div>
@@ -233,7 +233,7 @@ function Bubble({ m, canPlan, onOpen }: { m: Msg; canPlan: boolean; onOpen: (r: 
               </span>
             ))}
             {(m.data.actions || []).map((a: any) => (
-              <button key={a.route} className="px-3 py-1 rounded-lg bg-violet-600 text-xs" onClick={() => onOpen(a.route)}>
+              <button key={a.route} className="bp-btn !px-3 !py-1 text-xs" onClick={() => onOpen(a.route)}>
                 {a.label}
               </button>
             ))}

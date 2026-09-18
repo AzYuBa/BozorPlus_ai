@@ -20,17 +20,17 @@ export default function Product() {
     if (!ref.current || !data?.series?.length) return;
     const chart = createChart(ref.current, {
       height: 360,
-      layout: { background: { type: ColorType.Solid, color: "#0b1020" }, textColor: "#94a3b8" },
-      grid: { vertLines: { color: "#1e2a3d" }, horzLines: { color: "#1e2a3d" } },
-      rightPriceScale: { borderColor: "#1e2a3d" },
-      timeScale: { borderColor: "#1e2a3d" },
+      layout: { background: { type: ColorType.Solid, color: "#ffffff" }, textColor: "#5c726a" },
+      grid: { vertLines: { color: "#e4ece8" }, horzLines: { color: "#e4ece8" } },
+      rightPriceScale: { borderColor: "#d2ded8" },
+      timeScale: { borderColor: "#d2ded8" },
     });
     const s = chart.addCandlestickSeries({
-      upColor: "#22c55e",
-      downColor: "#f43f5e",
+      upColor: "#047857",
+      downColor: "#be123c",
       borderVisible: false,
-      wickUpColor: "#22c55e",
-      wickDownColor: "#f43f5e",
+      wickUpColor: "#047857",
+      wickDownColor: "#be123c",
     });
     s.setData(
       data.series.map((r: any) => ({
@@ -42,7 +42,7 @@ export default function Product() {
       }))
     );
     if (fc?.points?.length) {
-      const line = chart.addLineSeries({ color: "#a78bfa", lineWidth: 2 });
+      const line = chart.addLineSeries({ color: "#0f766e", lineWidth: 2 });
       line.setData(fc.points.map((p: any) => ({ time: p.date, value: p.yhat })));
     }
     chart.timeScale().fitContent();
@@ -62,26 +62,26 @@ export default function Product() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-3xl">{data?.product?.name_uz || slug}</h1>
-          <p className="text-slate-400 text-sm">so'm / {data?.product?.unit} · sham grafik · 80% ishonch oralig'i</p>
+          <p className="text-muted text-sm">so'm / {data?.product?.unit} · sham grafik · 80% ishonch oralig'i</p>
         </div>
         <div className="flex gap-2">
           {[7, 30, 90].map((d) => (
-            <button key={d} onClick={() => setDays(d)} className={`px-3 py-1 rounded-lg text-sm border ${days === d ? "bg-violet-600 border-violet-600" : "border-line"}`}>
+            <button key={d} onClick={() => setDays(d)} className={`px-3 py-1 rounded-lg text-sm border ${days === d ? "bg-accent border-accent" : "border-line"}`}>
               {d} kun
             </button>
           ))}
         </div>
       </div>
       <div className="mt-4 flex items-center gap-3">
-        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${color}`}>{sig}</span>
-        <span className="text-sm text-slate-300">{fc?.comment}</span>
+        <span className={`px-3 py-1 rounded-xl text-sm font-semibold ${color}`}>{sig}</span>
+        <span className="text-sm text-ink/80">{fc?.comment}</span>
         <span className="chip">MAPE {fc?.mape ?? "—"}</span>
         <span className="chip">DEMO</span>
       </div>
       <div ref={ref} className="mt-4 rounded-2xl overflow-hidden border border-line" />
       <div className="mt-6 overflow-x-auto rounded-2xl border border-line">
         <table className="w-full text-sm">
-          <thead className="text-slate-400 bg-black/30">
+          <thead className="text-muted bg-sand">
             <tr>
               <th className="text-left p-3">Bozor</th>
               <th className="text-right p-3">Narx</th>
@@ -95,7 +95,7 @@ export default function Product() {
                 <td className="p-3">{m.market}</td>
                 <td className="p-3 text-right">{som(m.price)}</td>
                 <td className="p-3 text-right">{m.n_obs}</td>
-                <td className="p-3 text-right text-slate-400">{m.date}</td>
+                <td className="p-3 text-right text-muted">{m.date}</td>
               </tr>
             ))}
           </tbody>

@@ -19,7 +19,7 @@ export default function Tax() {
       <div className="flex gap-2 mt-3 flex-wrap">
         <input type="number" className="bg-panel border border-line rounded-lg px-3 py-2" value={turnover} onChange={(e) => setTurnover(Number(e.target.value))} />
         <input type="number" className="bg-panel border border-line rounded-lg px-3 py-2" value={expenses} onChange={(e) => setExpenses(Number(e.target.value))} />
-        <button className="bg-violet-600 px-4 rounded-lg" onClick={run}>
+        <button className="bg-accent px-4 rounded-lg" onClick={run}>
           Taqqoslash
         </button>
       </div>
@@ -41,7 +41,7 @@ export default function Tax() {
           <li key={r.regime} className="bg-panel/60 border border-line rounded-xl p-3">
             <b>{r.regime}</b> — {som(r.tax)} · stavka {r.rate}%
             <div className="text-xs">
-              <a className="text-violet-400" href={r.legal_ref_url} target="_blank">
+              <a className="text-teal" href={r.legal_ref_url} target="_blank">
                 lex.uz
               </a>{" "}
               <span className="chip">{r.source}</span>
@@ -54,14 +54,14 @@ export default function Tax() {
           {st.variants.map((v: any) => (
             <div key={v.status} className="bg-panel/60 border border-line rounded-2xl p-4">
               <div className="font-medium">{v.label}</div>
-              <div className="text-sm text-slate-300">Soliq {som(v.tax)}</div>
-              <div className="text-sm text-slate-300">Xavf {v.risk} · kredit: {v.credit_access}</div>
-              <div className="text-xs text-slate-500 mt-2">{v.extras.join(" · ")}</div>
+              <div className="text-sm text-ink/80">Soliq {som(v.tax)}</div>
+              <div className="text-sm text-ink/80">Xavf {v.risk} · kredit: {v.credit_access}</div>
+              <div className="text-xs text-muted mt-2">{v.extras.join(" · ")}</div>
             </div>
           ))}
         </div>
       )}
-      <p className="text-xs text-slate-500 mt-3">{tax?.disclaimer}</p>
+      <p className="text-xs text-muted mt-3">{tax?.disclaimer}</p>
     </div>
   );
 }
