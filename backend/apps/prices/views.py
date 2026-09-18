@@ -13,7 +13,7 @@ from apps.ai.services.extract import extract_price_rule_based
 from apps.ai.services.forecast import backtest_mape, holt_linear, signal_from_forecast
 from apps.sourcing.views import haversine_km
 from apps.catalog.models import Product
-from apps.markets.models import Market
+from apps.markets.models import Market, Region
 from .models import Forecast, PriceDaily, PriceObservation
 
 
@@ -299,6 +299,108 @@ def compare(request):
         }
     return Response(
         {"product": product.name_uz, "unit": product.base_unit, "avg": int(avg), "rows": rows, "arbitrage": arb, "source": "BozorPuls"}
+    )
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def matrix(request):
+    cutoff = timezone.now().date() - timedelta(days=14)
+    rows = (
+        PriceDaily.objects.filter(date__gte=cutoff)
+        .select_related("product", "product__category", "market", "market__district", "market__district__region")
+        .order_by("market_id", "product_id", "-date")
+    )
+    latest = {}
+    prev = {}
+    for row in rows:
+        key = (row.market_id, row.product_id)
+        if key not in latest:
+            latest[key] = row
+        elif key not in prev:
+            prev[key] = row
+
+    by_market = {}
+    for key, last in latest.items():
+        by_market.setdefault(key[0], []).append((last, prev.get(key)))
+
+    def product_item(last, before):
+        chg = 0.0
+        if before and before.close:
+            chg = (last.close - before.close) / before.close * 100
+        return {
+            "slug": last.product.slug,
+            "name": last.product.name_uz,
+            "unit": last.product.base_unit,
+            "category": last.product.category.name_uz,
+            "price": last.close,
+            "change_pct": round(chg, 2),
+            "updated": str(last.date),
+        }
+
+    regions_out = []
+    for region in Region.objects.prefetch_related("districts__markets").order_by("name_uz"):
+        markets_out = []
+        region_by_slug = {}
+        for dist in region.districts.all():
+            for m in dist.markets.all():
+                products = []
+                for last, before in by_market.get(m.id, []):
+                    item = product_item(last, before)
+                    products.append(item)
+                    region_by_slug.setdefault(item["slug"], []).append(item)
+                products.sort(key=lambda x: x["name"])
+                markets_out.append(
+                    {
+                        "slug": m.slug,
+                        "name": m.name_uz,
+                        "type": m.type,
+                        "district": dist.name_uz,
+                        "products": products,
+                    }
+                )
+        markets_out.sort(key=lambda x: x["name"])
+        region_products = []
+        for items in region_by_slug.values():
+            prices = [i["price"] for i in items]
+            chgs = [i["change_pct"] for i in items]
+            region_products.append(
+                {
+                    "slug": items[0]["slug"],
+                    "name": items[0]["name"],
+                    "unit": items[0]["unit"],
+                    "category": items[0]["category"],
+                    "price": int(sum(prices) / len(prices)),
+                    "min": min(prices),
+                    "max": max(prices),
+                    "markets": len(items),
+                    "change_pct": round(sum(chgs) / len(chgs), 2),
+                }
+            )
+        region_products.sort(key=lambda x: x["name"])
+        regions_out.append(
+            {
+                "slug": region.slug,
+                "name": region.name_uz,
+                "market_count": len(markets_out),
+                "product_count": len(region_products),
+                "products": region_products,
+                "markets": markets_out,
+            }
+        )
+
+    flat_markets = []
+    for r in regions_out:
+        for m in r["markets"]:
+            flat_markets.append({**m, "region": r["name"], "region_slug": r["slug"]})
+
+    return Response(
+        {
+            "as_of": str(timezone.now().date()),
+            "regions": regions_out,
+            "markets": flat_markets,
+            "source": "so'nggi 14 kunlik bozor narxlari — viloyat va bozor kesimi",
+        }
     )
 
 

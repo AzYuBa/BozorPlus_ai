@@ -10,9 +10,11 @@ class Business(models.Model):
         LLC = "llc", "MChJ"
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="businesses")
-    name = models.CharField(max_length=160)
-    sector = models.CharField(max_length=64, default="ovqatlanish")
-    district = models.ForeignKey("markets.District", on_delete=models.CASCADE, related_name="businesses")
+    name = models.CharField(max_length=160, blank=True)
+    sector = models.CharField(max_length=64, blank=True)
+    district = models.ForeignKey(
+        "markets.District", null=True, blank=True, on_delete=models.SET_NULL, related_name="businesses"
+    )
     legal_status = models.CharField(max_length=24, choices=LegalStatus.choices, default=LegalStatus.INFORMAL)
     tax_regime = models.CharField(max_length=32, blank=True)
     monthly_revenue = models.BigIntegerField(default=0)

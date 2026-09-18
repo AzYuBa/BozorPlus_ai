@@ -15,7 +15,7 @@ def geo(request):
     regions = []
     for r in Region.objects.all():
         districts = [
-            {"id": d.id, "slug": d.slug, "name_uz": d.name_uz, "is_city": d.is_city}
+            {"id": d.id, "slug": d.slug, "name_uz": d.name_uz, "is_city": d.is_city, "region_slug": r.slug}
             for d in r.districts.all()
         ]
         regions.append({"id": r.id, "slug": r.slug, "name_uz": r.name_uz, "districts": districts})
@@ -28,8 +28,11 @@ def geo(request):
             "lat": m.lat,
             "lng": m.lng,
             "district": m.district.name_uz,
+            "district_slug": m.district.slug,
+            "region": m.district.region.name_uz,
+            "region_slug": m.district.region.slug,
         }
-        for m in Market.objects.select_related("district")
+        for m in Market.objects.select_related("district", "district__region")
     ]
     return Response({"regions": regions, "markets": markets})
 

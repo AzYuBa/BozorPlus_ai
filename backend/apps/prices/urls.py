@@ -7,5 +7,6 @@ urlpatterns = [
     path("pulse/", views.pulse),
     path("ohlc/", views.ohlc),
     path("compare/", views.compare),
+    path("matrix/", views.matrix),
     path("moderation/", views.moderation_queue),
 ]

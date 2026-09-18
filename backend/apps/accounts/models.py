@@ -11,6 +11,10 @@ class User(AbstractUser):
         BANK = "bank", "Bank"
         ADMIN = "admin", "Admin"
 
+    class Gender(models.TextChoices):
+        FEMALE = "female", "Ayol"
+        MALE = "male", "Erkak"
+
     telegram_id = models.BigIntegerField(null=True, blank=True, unique=True)
     phone = models.CharField(max_length=32, blank=True)
     role = models.CharField(max_length=32, choices=Role.choices, default=Role.ENTREPRENEUR)
@@ -18,6 +22,12 @@ class User(AbstractUser):
     district = models.ForeignKey(
         "markets.District", null=True, blank=True, on_delete=models.SET_NULL, related_name="users"
     )
+    market = models.ForeignKey(
+        "markets.Market", null=True, blank=True, on_delete=models.SET_NULL, related_name="users"
+    )
+    gender = models.CharField(max_length=16, choices=Gender.choices, blank=True)
+    birth_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    stir = models.CharField(max_length=14, blank=True)
     reputation = models.DecimalField(max_digits=5, decimal_places=2, default=1)
     consent_at = models.DateTimeField(null=True, blank=True)
     points = models.IntegerField(default=0)

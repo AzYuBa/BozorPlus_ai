@@ -12,9 +12,9 @@ from .models import Business, LedgerEntry
 
 
 def _business_for(user) -> Business | None:
-    if not user or not user.is_authenticated:
-        return Business.objects.filter(name__icontains="Dilshod").first() or Business.objects.first()
-    return user.businesses.first() or Business.objects.filter(owner=user).first()
+    if user and getattr(user, "is_authenticated", False):
+        return user.businesses.first()
+    return Business.objects.filter(name__icontains="Dilshod").first() or Business.objects.first()
 
 
 @api_view(["POST"])
