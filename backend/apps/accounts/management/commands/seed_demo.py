@@ -114,6 +114,12 @@ MARKETS = [
     ("gurlan-bozor", "Gurlan bozori", "gurlan", "dehqon", 41.8447, 60.3900),
     ("shovot-bozor", "Shovot bozori", "shovot", "dehqon", 41.6550, 60.3020),
     ("hazorasp-bozor", "Hazorasp bozori", "hazorasp", "dehqon", 41.3190, 61.0740),
+    ("qoyliq", "Qo'yliq ulgurji bozori", "toshkent-shahar", "ulgurji", 41.2210, 69.3510),
+    ("chorsu", "Chorsu bozori", "toshkent-shahar", "dehqon", 41.3260, 69.2350),
+    ("orikzor", "O'rikzor bozori", "toshkent-shahar", "ulgurji", 41.3510, 69.1800),
+    ("abu-sahiy", "Abu Sahiy bozori", "toshkent-shahar", "ulgurji", 41.2700, 69.2200),
+    ("siyob", "Siyob bozori", "samarqand-shahar", "dehqon", 39.6600, 66.9800),
+    ("andijon-bozor", "Andijon bozori", "andijon-shahar", "dehqon", 40.7830, 72.3440),
 ]
 
 
@@ -125,10 +131,30 @@ class Command(BaseCommand):
         region, _ = Region.objects.get_or_create(
             slug="xorazm", defaults={"name_uz": "Xorazm viloyati", "name_ru": "Хорезмская область"}
         )
+        extra_regions = {
+            "toshkent": Region.objects.get_or_create(
+                slug="toshkent", defaults={"name_uz": "Toshkent", "name_ru": "Ташкент"}
+            )[0],
+            "samarqand": Region.objects.get_or_create(
+                slug="samarqand", defaults={"name_uz": "Samarqand viloyati", "name_ru": "Самарканд"}
+            )[0],
+            "andijon": Region.objects.get_or_create(
+                slug="andijon", defaults={"name_uz": "Andijon viloyati", "name_ru": "Андижан"}
+            )[0],
+        }
         districts = {}
         for slug, name, is_city in DISTRICTS:
             d, _ = District.objects.get_or_create(
                 slug=slug, defaults={"region": region, "name_uz": name, "name_ru": name, "is_city": is_city}
+            )
+            districts[slug] = d
+        for slug, name, rkey in [
+            ("toshkent-shahar", "Toshkent shahri", "toshkent"),
+            ("samarqand-shahar", "Samarqand shahri", "samarqand"),
+            ("andijon-shahar", "Andijon shahri", "andijon"),
+        ]:
+            d, _ = District.objects.get_or_create(
+                slug=slug, defaults={"region": extra_regions[rkey], "name_uz": name, "name_ru": name, "is_city": True}
             )
             districts[slug] = d
 
@@ -210,14 +236,22 @@ class Command(BaseCommand):
             "gurlan-bozor": 0.96,
             "shovot-bozor": 0.98,
             "hazorasp-bozor": 1.06,
+            "qoyliq": 0.86,
+            "chorsu": 1.10,
+            "orikzor": 0.94,
+            "abu-sahiy": 0.89,
+            "siyob": 0.97,
+            "andijon-bozor": 0.91,
         }
-        if PriceDaily.objects.count() < 1000:
+        missing_markets = [m for m in markets.values() if not PriceDaily.objects.filter(market=m).exists()]
+        if PriceDaily.objects.count() < 1000 or missing_markets:
             rows = []
+            target_markets = markets if PriceDaily.objects.count() < 1000 else {m.slug: m for m in missing_markets}
             for slug, p in products.items():
                 base = bases[slug]
                 phase = (hash(slug) % 100) / 100 * math.pi
-                for mi, (mslug, market) in enumerate(markets.items()):
-                    bias = market_bias[mslug]
+                for mslug, market in target_markets.items():
+                    bias = market_bias.get(mslug, 1.0)
                     for i in range(90):
                         d = today - timedelta(days=89 - i)
                         seas = 1 + 0.12 * math.sin(2 * math.pi * i / 365 + phase)
@@ -312,7 +346,39 @@ class Command(BaseCommand):
                         is_active=True,
                     )
 
-        # tax + loans
+        if Supplier.objects.count() < 12:
+            extra = [
+                ("Qo'yliq Agro", "toshkent-shahar", "+998901111001", "qoyliq"),
+                ("Chorsu Savdo", "toshkent-shahar", "+998901111002", "chorsu"),
+                ("Siyob fermer", "samarqand-shahar", "+998901111003", "siyob"),
+                ("Andijon Don", "andijon-shahar", "+998901111004", "andijon-bozor"),
+            ]
+            key_slugs = ["un", "guruch", "mol-gosht", "piyoz", "kartoshka", "shakar", "paxta-yog", "tovuq"]
+            for name, dslug, phone, mslug in extra:
+                if Supplier.objects.filter(name=name).exists():
+                    continue
+                if mslug not in markets or dslug not in districts:
+                    continue
+                s = Supplier.objects.create(
+                    name=name,
+                    district=districts[dslug],
+                    phone=phone,
+                    rating=Decimal(str(round(random.uniform(4.2, 4.9), 2))),
+                    is_verified=True,
+                    is_demo=True,
+                )
+                for slug in key_slugs:
+                    last = PriceDaily.objects.filter(product=products[slug], market=markets[mslug]).order_by("-date").first()
+                    px = last.close if last else bases[slug]
+                    Offer.objects.create(
+                        supplier=s,
+                        product=products[slug],
+                        market=markets[mslug],
+                        price=int(px * random.uniform(0.95, 1.05)),
+                        min_qty=10,
+                        delivery_terms="Respublika bo'ylab 48 soat",
+                        is_active=True,
+                    )
         if TaxRule.objects.count() < 4:
             TaxRule.objects.bulk_create(
                 [
@@ -444,6 +510,52 @@ class Command(BaseCommand):
                     ),
                 ]
             )
+        extra_loans = [
+            dict(
+                name="Xalq banki — imtiyozli aylanma kredit",
+                provider="Xalq banki",
+                rate=Decimal("0.1750"),
+                max_amount=500_000_000,
+                term_months=36,
+                grace_months=3,
+                collateral="Garov / kafillik",
+                guarantee_pct=Decimal("30"),
+                subsidy_rule={"subsidy": 0.03},
+                eligibility={},
+                legal_ref_url="https://lex.uz",
+                valid_from=date(2026, 1, 1),
+            ),
+            dict(
+                name="Mikrokreditbank — KOB mikroqarz",
+                provider="Mikrokreditbank",
+                rate=Decimal("0.1900"),
+                max_amount=150_000_000,
+                term_months=24,
+                grace_months=2,
+                collateral="Kafillik",
+                guarantee_pct=Decimal("20"),
+                subsidy_rule={"subsidy": 0.02},
+                eligibility={},
+                legal_ref_url="https://lex.uz",
+                valid_from=date(2026, 1, 1),
+            ),
+            dict(
+                name="Ipoteka-bank — asbob-uskuna krediti",
+                provider="Ipoteka-bank",
+                rate=Decimal("0.1650"),
+                max_amount=800_000_000,
+                term_months=48,
+                grace_months=6,
+                collateral="Asbob-uskuna garovi",
+                guarantee_pct=Decimal("40"),
+                subsidy_rule={"subsidy": 0.04},
+                eligibility={},
+                legal_ref_url="https://lex.uz",
+                valid_from=date(2026, 1, 1),
+            ),
+        ]
+        for row in extra_loans:
+            LoanProgram.objects.get_or_create(name=row["name"], defaults=row)
 
         biz, _ = Business.objects.get_or_create(
             owner=dilshod,

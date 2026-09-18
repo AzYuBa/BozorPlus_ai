@@ -37,15 +37,18 @@ def mape(actual: list[float], pred: list[float]) -> float | None:
     return float(np.mean([abs(a - p) / a for a, p in pairs]))
 
 
-def signal_from_forecast(last_price: float, yhat: list[float], lo: list[float], hi: list[float], threshold: float = 0.05):
+def signal_from_forecast(
+    last_price: float, yhat: list[float], lo: list[float], hi: list[float], threshold: float = 0.05, horizon: int | None = None
+):
+    h = horizon or len(yhat) or 7
     if not last_price or not yhat:
         return "NEYTRAL", "Prognoz uchun yetarli ma'lumot yo'q."
     future = yhat[-1]
     delta = (future - last_price) / last_price
     if delta >= threshold and lo[-1] > last_price:
-        return "HOZIR OL", f"7 kunda narx ~{delta*100:.1f}% oshishi kutilmoqda. Hozir olish foydali."
+        return "HOZIR OL", f"{h} kunda narx ~{delta*100:.1f}% oshishi kutilmoqda. Hozir olish foydali."
     if delta <= -threshold and hi[-1] < last_price:
-        return "KUT", f"7 kunda narx ~{abs(delta)*100:.1f}% tushishi kutilmoqda. Kutish foydali."
+        return "KUT", f"{h} kunda narx ~{abs(delta)*100:.1f}% tushishi kutilmoqda. Kutish foydali."
     return "NEYTRAL", "Narx barqaror zonada, shoshilinch signal yo'q."
 
 

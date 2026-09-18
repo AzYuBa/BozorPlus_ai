@@ -111,14 +111,54 @@ def build_plan(inputs: dict, price_snapshot: dict) -> dict:
     op_npv = npv([monthly_net_after_loan] * months, discount) - investment
     pb = payback_months(investment, monthly_net_after_loan)
     bep = break_even_units(fixed, sell_price, int(materials_cost / max(1, units_month)))
+    cash = -investment
+    cashflow = []
+    for m in range(1, 13):
+        cash += monthly_net_after_loan
+        cashflow.append(
+            {
+                "month": m,
+                "inflow": revenue,
+                "opex": materials_cost + fixed,
+                "loan": loan_payment,
+                "net": monthly_net_after_loan,
+                "cash": cash,
+                "gap": cash < 0,
+            }
+        )
+    place = inputs.get("place") or "Xorazm"
+    title = inputs.get("title") or "Biznes"
+    swot = {
+        "s": [
+            "Tannarx BozorPuls real narxlariga asoslangan",
+            f"{place}da mahalliy talab va logistika yaqinligi",
+        ],
+        "w": [
+            "Aylanma mablag' va kassa uzilishi xavfi",
+            "Bitta asosiy xom ashyoga bog'liqlik",
+        ],
+        "o": [
+            "Imtiyozli kredit dasturlari va formallashuv",
+            "Ulgurji xarid orqali 10–20% tejash",
+        ],
+        "t": [
+            "Xom ashyo narxi oshishi (stress-test)",
+            "Soliq rejimi o'zgarishi va QQS chegarasi",
+        ],
+    }
     return {
         "revenue_month": revenue,
         "materials_cost_month": materials_cost,
         "fixed_cost_month": fixed,
+        "capex": investment,
+        "opex_month": materials_cost + fixed,
         "net_month": monthly_net_after_loan,
         "npv": op_npv,
         "payback_months": pb,
         "break_even_units": bep,
+        "cashflow_12": cashflow,
+        "swot": swot,
+        "title": title,
         "materials": materials,
         "source": "kalkulyator + BozorPuls narxi",
     }

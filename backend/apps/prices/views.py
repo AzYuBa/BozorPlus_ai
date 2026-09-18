@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from apps.ai.services.anomaly import is_anomalous
 from apps.ai.services.extract import extract_price_rule_based
 from apps.ai.services.forecast import backtest_mape, holt_linear, signal_from_forecast
+from apps.sourcing.views import haversine_km
 from apps.catalog.models import Product
 from apps.markets.models import Market
 from .models import Forecast, PriceDaily, PriceObservation
@@ -273,7 +274,32 @@ def compare(request):
         r["diff_som"] = int(r["price"] - avg)
         r["diff_pct"] = round((r["price"] - avg) / avg * 100, 2)
     rows.sort(key=lambda r: r["price"])
-    return Response({"product": product.name_uz, "unit": product.base_unit, "avg": int(avg), "rows": rows, "source": "BozorPuls"})
+    arb = None
+    if len(rows) >= 2:
+        cheap, dear = rows[0], rows[-1]
+        qty = float(request.query_params.get("qty") or 1000)
+        km = haversine_km(cheap.get("lat"), cheap.get("lng"), dear.get("lat"), dear.get("lng"))
+        delivery = int(80_000 + km * 1200 * max(qty / 1000.0, 0.05))
+        gross = int((dear["price"] - cheap["price"]) * qty)
+        net = gross - delivery
+        arb = {
+            "buy_market": cheap["market"],
+            "sell_market": dear["market"],
+            "buy_price": cheap["price"],
+            "sell_price": dear["price"],
+            "qty_kg": qty,
+            "spread_pct": round((dear["price"] - cheap["price"]) / cheap["price"] * 100, 2),
+            "gross": gross,
+            "delivery": delivery,
+            "km": round(km, 1),
+            "net": net,
+            "comment": (
+                f"{cheap['market']}dan olib {dear['market']}da sotish: {qty:g} kg da sof {net:,} so'm".replace(",", " ")
+            ),
+        }
+    return Response(
+        {"product": product.name_uz, "unit": product.base_unit, "avg": int(avg), "rows": rows, "arbitrage": arb, "source": "BozorPuls"}
+    )
 
 
 @api_view(["GET"])
@@ -293,16 +319,27 @@ def forecast_view(request):
         from django.db.models import Avg
 
         closes = [int(x["c"]) for x in qs.values("date").annotate(c=Avg("close")).order_by("date")]
-    yhat, lo, hi = holt_linear([float(c) for c in closes], horizon=7)
+    horizon = int(request.query_params.get("horizon") or 14)
+    horizon = max(7, min(horizon, 30))
+    yhat, lo, hi = holt_linear([float(c) for c in closes], horizon=horizon)
     last = float(closes[-1]) if closes else 0
-    sig, comment = signal_from_forecast(last, yhat, lo, hi, threshold=getattr(settings, "SIGNAL_THRESHOLD", 0.05))
+    sig, comment = signal_from_forecast(
+        last, yhat, lo, hi, threshold=getattr(settings, "SIGNAL_THRESHOLD", 0.05), horizon=horizon
+    )
     bt = backtest_mape([float(c) for c in closes])
+    delta = ((yhat[-1] - last) / last * 100) if last and yhat else 0
+    conf = int(max(40, min(96, 100 - (bt or 0.12) * 100)))
+    reasons = [
+        f"Holt/ETS trendlari {horizon} kunda {delta:+.1f}% o'zgarish ko'rsatadi.",
+        "Mavsumiylik va bozorlar o'rtasidagi spred DEMO qatoriga asoslangan.",
+        f"Backtest MAPE {(bt or 0)*100:.1f}% — ishonchlilik indeksi {conf}.",
+    ]
     market = Market.objects.filter(slug=market_slug).first() if market_slug else Market.objects.filter(slug="urganch-markaziy").first()
     if market:
         Forecast.objects.update_or_create(
             product=product,
             market=market,
-            horizon=7,
+            horizon=horizon,
             defaults={
                 "yhat": yhat,
                 "lo": lo,
@@ -327,6 +364,10 @@ def forecast_view(request):
             "product": product.name_uz,
             "signal": sig,
             "comment": comment,
+            "horizon": horizon,
+            "change_pct": round(delta, 2),
+            "confidence": conf,
+            "reasons": reasons,
             "mape": round(bt, 4) if bt is not None else None,
             "last_price": int(last),
             "points": points,

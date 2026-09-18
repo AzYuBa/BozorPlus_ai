@@ -27,6 +27,12 @@ def loan_calc(request):
     if subsidy > 1:
         subsidy = subsidy / 100.0
     result = loan_summary(amount, rate, months, kind, grace, subsidy)
+    income = int(request.data.get("monthly_income") or 0)
+    if income:
+        dti = result["monthly_payment"] / income
+        result["dti"] = round(dti, 3)
+        result["dti_pct"] = round(dti * 100, 1)
+        result["dti_ok"] = dti <= 0.4
     # with vs without subsidy comparison
     if subsidy:
         result["without_subsidy"] = loan_summary(amount, rate if request.data.get("rate") else 0.218, months, kind, grace, 0)
@@ -101,11 +107,26 @@ def tax_compare(request):
         )
     )
     rows = tax_burden(turnover, expenses, sector, rules)
+    warnings = []
+    if turnover >= 1_000_000_000:
+        warnings.append("Yillik aylanma 1 mlrd so'mdan oshdi — QQS rejimiga yaqinlashyapsiz.")
+    if turnover >= 4_940_000_000:
+        warnings.append("QQS majburiy chegara (~4,94 mlrd so'm, 01.06.2026).")
+    calendar = [
+        {"when": "Har oy 15-sanagacha", "title": "YaTT aylanma solig'i to'lovi", "risk": "kechikish — penya"},
+        {"when": "Har chorak", "title": "Hisobot (YaTT / MChJ)", "risk": "jarima"},
+        {"when": "Har yil 1-fevralgacha", "title": "Yillik deklaratsiya", "risk": "tekshiruv"},
+        {"when": "Aylanma 1 mlrd+", "title": "QQS hisobi va EHF nazorati", "risk": "qo'shimcha soliq"},
+    ]
     return Response(
         {
             "turnover": turnover,
             "expenses": expenses,
             "rows": rows,
+            "warnings": warnings,
+            "calendar": calendar,
+            "qqs_soft": 1_000_000_000,
+            "qqs_hard": 4_940_000_000,
             "disclaimer": "Ma'lumot uchun; yakuniy qarordan oldin soliq maslahatchisi bilan tekshiring.",
             "source": "TaxRule / lex.uz",
         }

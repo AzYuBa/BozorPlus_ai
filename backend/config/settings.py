@@ -160,6 +160,9 @@ CELERY_BEAT_SCHEDULE = {
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 LITELLM_MODEL = os.getenv("LITELLM_MODEL", "gpt-4o-mini")
 LITELLM_API_KEY = os.getenv("LITELLM_API_KEY", os.getenv("OPENAI_API_KEY", ""))
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "") or LITELLM_API_KEY
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+# OpenAI kaliti faqat .env dan o'qiladi, frontendga chiqmaydi.
 SIGNAL_THRESHOLD = float(os.getenv("SIGNAL_THRESHOLD", "0.05"))
 DATA_DIR = Path(os.getenv("DATA_DIR", str(ROOT_DIR / "data")))
 if not DATA_DIR.exists():

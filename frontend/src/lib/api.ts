@@ -26,7 +26,7 @@ export function homeFor(role?: string) {
 export const BUYER_NAV = [
   { to: "/profile", label: "Profil" },
   { to: "/pulse", label: "Bozor pulsi" },
-  { to: "/agent", label: "Xarid agenti" },
+  { to: "/agent", label: "AI chat" },
 ];
 
 export const ENTREPRENEUR_NAV = [
@@ -34,7 +34,7 @@ export const ENTREPRENEUR_NAV = [
   { to: "/plan", label: "Biznes-reja" },
   { to: "/ledger", label: "Ovozli daftar" },
   { to: "/pulse", label: "Bozor pulsi" },
-  { to: "/agent", label: "Xarid agenti" },
+  { to: "/agent", label: "AI chat" },
 ];
 
 export function navFor(role?: string) {
@@ -51,6 +51,24 @@ export async function api(path: string, opts: RequestInit = {}) {
   const t = getToken();
   if (t) headers.Authorization = `Bearer ${t}`;
   const res = await fetch(`${API}${path}`, { ...opts, headers });
+  const text = await res.text();
+  let data: any = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = { detail: text };
+  }
+  if (!res.ok) {
+    throw new Error(data?.detail || res.statusText);
+  }
+  return data;
+}
+
+export async function apiUpload(path: string, form: FormData) {
+  const headers: Record<string, string> = {};
+  const t = getToken();
+  if (t) headers.Authorization = `Bearer ${t}`;
+  const res = await fetch(`${API}${path}`, { method: "POST", headers, body: form });
   const text = await res.text();
   let data: any = null;
   try {

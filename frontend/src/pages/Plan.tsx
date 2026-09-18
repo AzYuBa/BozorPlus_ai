@@ -11,28 +11,23 @@ const TABS = [
   { id: "kredit", label: "3. Kredit markazi" },
   { id: "soliq", label: "4. Soliq" },
   { id: "paket", label: "5. Paket" },
+  { id: "keys", label: "6. Keys" },
 ] as const;
+
+const TEMPLATES = [
+  { id: "somsaxona", title: "2-filial somsaxona", sector: "ovqatlanish", place: "Urganch", investment: 150000000, employees: 6, wage: 2500000, rent: 5000000, units_month: 8000, sell_price: 9000, un: 1500, gosht: 400, piyoz: 200, loan_payment: 8000000 },
+  { id: "novvoy", title: "Novvoyxona", sector: "ovqatlanish", place: "Urganch", investment: 80000000, employees: 4, wage: 2200000, rent: 3500000, units_month: 12000, sell_price: 3500, un: 4000, gosht: 0, piyoz: 40, loan_payment: 4000000 },
+  { id: "minimarket", title: "Oziq-ovqat minimarketi", sector: "savdo", place: "Xiva", investment: 200000000, employees: 5, wage: 2500000, rent: 8000000, units_month: 5000, sell_price: 18000, un: 800, gosht: 200, piyoz: 150, loan_payment: 9000000 },
+  { id: "issiqxona", title: "Issiqxona", sector: "qishloq", place: "Gurlan", investment: 250000000, employees: 3, wage: 2800000, rent: 2000000, units_month: 4000, sell_price: 12000, un: 0, gosht: 0, piyoz: 50, loan_payment: 10000000 },
+  { id: "tikuv", title: "Tikuvchilik sexi", sector: "ishlab-chiqarish", place: "Urganch", investment: 120000000, employees: 8, wage: 2000000, rent: 4000000, units_month: 1500, sell_price: 45000, un: 0, gosht: 0, piyoz: 0, loan_payment: 6000000 },
+];
 
 export default function Plan() {
   const [params, setParams] = useSearchParams();
   const requested = params.get("tab");
   const tab = (TABS.some((t) => t.id === requested) ? requested : "reja") as (typeof TABS)[number]["id"];
   const setTab = (id: (typeof TABS)[number]["id"]) => setParams(id === "reja" ? {} : { tab: id });
-  const [form, setForm] = useState({
-    title: "2-filial somsaxona",
-    sector: "ovqatlanish",
-    place: "Urganch",
-    investment: 150000000,
-    employees: 6,
-    wage: 2500000,
-    rent: 5000000,
-    units_month: 8000,
-    sell_price: 9000,
-    un: 1500,
-    gosht: 400,
-    piyoz: 200,
-    loan_payment: 8000000,
-  });
+  const [form, setForm] = useState({ ...TEMPLATES[0] });
   const [plan, setPlan] = useState<any>(null);
   const [stress, setStress] = useState<any>(null);
   const [busy, setBusy] = useState(false);
@@ -78,6 +73,17 @@ export default function Plan() {
 
       {tab === "reja" && (
         <div className="mt-4 space-y-4">
+          <div className="flex gap-2 flex-wrap">
+            {TEMPLATES.map((tpl) => (
+              <button
+                key={tpl.id}
+                className={`px-3 py-1.5 rounded-full text-sm ${form.title === tpl.title ? "bg-violet-600" : "border border-line text-slate-300"}`}
+                onClick={() => setForm({ ...tpl })}
+              >
+                {tpl.title}
+              </button>
+            ))}
+          </div>
           <div className="bg-panel/60 border border-line rounded-2xl p-5 grid sm:grid-cols-2 gap-3">
             <Field label="Reja nomi" value={form.title} onChange={(v) => set("title", v)} />
             <Field label="Soha" value={form.sector} onChange={(v) => set("sector", v)} />
@@ -103,6 +109,8 @@ export default function Plan() {
               <Stat label="Zararsizlik" value={`${plan.outputs?.break_even_units ?? "—"} dona`} />
               <Stat label="Yillik aylanma" value={som(yearlyRev)} />
               <Stat label="Xom ashyo/oy" value={som(plan.outputs?.materials_cost_month)} />
+              <Stat label="CAPEX" value={som(plan.outputs?.capex)} />
+              <Stat label="OPEX / oy" value={som(plan.outputs?.opex_month)} />
               <div className="sm:col-span-3 bg-panel/60 border border-line rounded-2xl p-4 text-sm">
                 <div className="font-medium mb-2">Xom ashyo — BozorPuls narxi</div>
                 {Object.entries(plan.price_snapshot || {}).map(([k, v]: any) => (
@@ -123,17 +131,58 @@ export default function Plan() {
                   <button className="border border-line px-4 py-2 rounded-lg" onClick={() => setTab("soliq")}>
                     Soliq
                   </button>
+                  <button className="border border-line px-4 py-2 rounded-lg" onClick={() => window.print()}>
+                    PDF / chop etish
+                  </button>
                 </div>
               </div>
+              {(plan.outputs?.cashflow_12 || []).length > 0 && (
+                <div className="sm:col-span-3 overflow-x-auto border border-line rounded-2xl">
+                  <div className="p-3 font-medium text-sm">12 oylik kassa oqimi</div>
+                  <table className="w-full text-sm">
+                    <thead className="bg-black/30 text-slate-400">
+                      <tr>
+                        <th className="p-2 text-left">Oy</th>
+                        <th className="p-2 text-right">Kirim</th>
+                        <th className="p-2 text-right">OPEX</th>
+                        <th className="p-2 text-right">Kredit</th>
+                        <th className="p-2 text-right">Sof</th>
+                        <th className="p-2 text-right">Kassa</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {plan.outputs.cashflow_12.map((r: any) => (
+                        <tr key={r.month} className="border-t border-line">
+                          <td className="p-2">{r.month}</td>
+                          <td className="p-2 text-right">{som(r.inflow)}</td>
+                          <td className="p-2 text-right">{som(r.opex)}</td>
+                          <td className="p-2 text-right">{som(r.loan)}</td>
+                          <td className="p-2 text-right">{som(r.net)}</td>
+                          <td className={`p-2 text-right ${r.gap ? "text-rose-400" : "text-emerald-400"}`}>{som(r.cash)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {plan.outputs?.swot && (
+                <div className="sm:col-span-3 grid sm:grid-cols-2 gap-3 text-sm">
+                  <SwotBox title="Kuchli (S)" items={plan.outputs.swot.s} />
+                  <SwotBox title="Zaif (W)" items={plan.outputs.swot.w} />
+                  <SwotBox title="Imkoniyat (O)" items={plan.outputs.swot.o} />
+                  <SwotBox title="Xavf (T)" items={plan.outputs.swot.t} />
+                </div>
+              )}
             </div>
           )}
         </div>
       )}
 
       {tab === "stress" && <StressBlock planId={plan?.id} stress={stress} setStress={setStress} />}
-      {tab === "kredit" && <CreditBlock amount={form.investment} />}
+      {tab === "kredit" && <CreditBlock amount={form.investment} monthlyIncome={Math.round(yearlyRev / 12)} />}
       {tab === "soliq" && <TaxBlock turnover={yearlyRev} expenses={Math.round(yearlyRev * 0.6)} sector={form.sector} />}
       {tab === "paket" && <PackageBlock onOpenBank={() => setTab("kredit")} />}
+      {tab === "keys" && <CaseStudy />}
     </div>
   );
 }
@@ -182,16 +231,19 @@ function StressBlock({ planId, stress, setStress }: { planId?: number; stress: a
   );
 }
 
-function CreditBlock({ amount }: { amount: number }) {
+function CreditBlock({ amount, monthlyIncome }: { amount: number; monthlyIncome: number }) {
   const [loan, setLoan] = useState<any>(null);
   const [programs, setPrograms] = useState<any[]>([]);
   const [kti, setKti] = useState<any>(null);
-  const [form, setForm] = useState({ amount, rate: 14, months: 36, grace: 3, subsidy: 4 });
+  const [form, setForm] = useState({ amount, rate: 14, months: 36, grace: 3, subsidy: 4, type: "annuity" });
   useEffect(() => {
     setForm((f) => ({ ...f, amount }));
   }, [amount]);
   async function calc() {
-    const r = await api("/api/finance/loan/calc/", { method: "POST", body: JSON.stringify(form) });
+    const r = await api("/api/finance/loan/calc/", {
+      method: "POST",
+      body: JSON.stringify({ ...form, monthly_income: monthlyIncome }),
+    });
     setLoan(r);
   }
   useEffect(() => {
@@ -200,13 +252,21 @@ function CreditBlock({ amount }: { amount: number }) {
     api("/api/credit-readiness/1/").then(setKti);
   }, [amount]);
   const score = kti?.score ?? 0;
+  const labels: Record<string, string> = { amount: "Summa, so'm", rate: "Stavka %", months: "Muddat, oy", grace: "Imtiyoz, oy", subsidy: "Kompensatsiya %" };
   return (
     <div className="mt-4 grid lg:grid-cols-2 gap-4">
       <div className="bg-panel/60 border border-line rounded-2xl p-4 space-y-2">
-        <h2 className="font-medium">Kredit kalkulyatori</h2>
+        <h2 className="font-medium">Smart kredit kalkulyatori</h2>
         {(["amount", "rate", "months", "grace", "subsidy"] as const).map((k) => (
-          <Field key={k} label={k} type="number" value={(form as any)[k]} onChange={(v) => setForm({ ...form, [k]: Number(v) })} />
+          <Field key={k} label={labels[k]} type="number" value={(form as any)[k]} onChange={(v) => setForm({ ...form, [k]: Number(v) })} />
         ))}
+        <label className="block text-sm text-slate-300">
+          Jadval
+          <select className="mt-1 w-full bg-panel border border-line rounded-xl px-3 py-2" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
+            <option value="annuity">Anuitet</option>
+            <option value="differential">Differensial</option>
+          </select>
+        </label>
         <button className="bg-violet-600 px-4 py-2 rounded-lg" onClick={calc}>
           Hisoblash
         </button>
@@ -215,6 +275,11 @@ function CreditBlock({ amount }: { amount: number }) {
             <div>Oylik: {som(loan.monthly_payment)}</div>
             <div>Jami foiz: {som(loan.total_interest)}</div>
             <div>Samarali stavka: {(loan.effective_rate * 100).toFixed(2)}%</div>
+            {loan.dti_pct != null && (
+              <div className={loan.dti_ok ? "text-emerald-400" : "text-rose-400"}>
+                DTI {loan.dti_pct}% {loan.dti_ok ? "(40% dan past)" : "(yuqori — bank rad etishi mumkin)"}
+              </div>
+            )}
             <span className="chip">kalkulyator</span>
           </div>
         )}
@@ -254,6 +319,7 @@ function CreditBlock({ amount }: { amount: number }) {
               <tr key={p.id} className="border-t border-line">
                 <td className="p-2">
                   {p.name}
+                  <div className="text-xs text-slate-400">{p.provider}</div>
                   <div className="text-xs text-violet-400">{p.legal_ref_url}</div>
                 </td>
                 <td className="p-2 text-center">{(p.rate * 100).toFixed(1)}%</td>
@@ -264,6 +330,33 @@ function CreditBlock({ amount }: { amount: number }) {
           </tbody>
         </table>
       </div>
+      {loan?.schedule?.length > 0 && (
+        <div className="lg:col-span-2 overflow-x-auto border border-line rounded-2xl">
+          <div className="p-3 font-medium text-sm">To'lov jadvali (birinchi 12 oy)</div>
+          <table className="w-full text-sm">
+            <thead className="bg-black/30 text-slate-400">
+              <tr>
+                <th className="p-2 text-left">Oy</th>
+                <th className="p-2 text-right">Asosiy</th>
+                <th className="p-2 text-right">Foiz</th>
+                <th className="p-2 text-right">To'lov</th>
+                <th className="p-2 text-right">Qoldiq</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loan.schedule.slice(0, 12).map((r: any) => (
+                <tr key={r.month} className="border-t border-line">
+                  <td className="p-2">{r.month}</td>
+                  <td className="p-2 text-right">{som(r.principal)}</td>
+                  <td className="p-2 text-right">{som(r.interest)}</td>
+                  <td className="p-2 text-right">{som(r.payment)}</td>
+                  <td className="p-2 text-right">{som(r.remaining)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <div className="lg:col-span-2">
         <BankPanel />
       </div>
@@ -296,6 +389,13 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
           Taqqoslash
         </button>
       </div>
+      {tax?.warnings?.length > 0 && (
+        <div className="mt-4 border border-amber-500/40 bg-amber-500/10 rounded-2xl p-4 text-sm text-amber-200 space-y-1">
+          {tax.warnings.map((w: string) => (
+            <div key={w}>{w}</div>
+          ))}
+        </div>
+      )}
       {tax && (
         <div className="mt-4 bg-panel/60 border border-line rounded-2xl p-4 h-64">
           <ResponsiveContainer>
@@ -328,6 +428,29 @@ function TaxBlock({ turnover, expenses, sector }: { turnover: number; expenses: 
               <div className="text-sm">Xavf {v.risk} · kredit: {v.credit_access}</div>
             </div>
           ))}
+        </div>
+      )}
+      {(tax?.calendar || []).length > 0 && (
+        <div className="mt-4 border border-line rounded-2xl overflow-hidden">
+          <div className="p-3 font-medium text-sm">Tadbirkor soliq taqvimi</div>
+          <table className="w-full text-sm">
+            <thead className="bg-black/30 text-slate-400">
+              <tr>
+                <th className="p-2 text-left">Qachon</th>
+                <th className="p-2 text-left">Nima</th>
+                <th className="p-2 text-left">Xavf</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tax.calendar.map((c: any) => (
+                <tr key={c.title} className="border-t border-line">
+                  <td className="p-2">{c.when}</td>
+                  <td className="p-2">{c.title}</td>
+                  <td className="p-2 text-rose-300">{c.risk}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
@@ -382,6 +505,49 @@ function Stat({ label, value }: { label: string; value: string }) {
     <div className="bg-panel/60 border border-line rounded-2xl p-4">
       <div className="text-xs text-slate-400">{label}</div>
       <div className="font-display text-xl">{value}</div>
+    </div>
+  );
+}
+
+function SwotBox({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="bg-panel/60 border border-line rounded-2xl p-4">
+      <div className="font-medium mb-2">{title}</div>
+      <ul className="list-disc ml-4 text-slate-300 space-y-1">
+        {(items || []).map((x) => (
+          <li key={x}>{x}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function CaseStudy() {
+  return (
+    <div className="mt-4 space-y-4 text-sm text-slate-300">
+      <div className="bg-panel/60 border border-line rounded-2xl p-5">
+        <h2 className="font-display text-2xl text-white">Alisher aka · Samarqand</h2>
+        <p className="mt-2">
+          Novvoyxona ochmoqchi. BozorPuls Qo'yliqda unni arzon topadi, 14 kunlik prognoz «HOZIR OL» beradi, tannarx shu narxga
+          asoslanadi. Kredit markazi Xalq bankining 17.5% dasturini moslashtiradi, DTI va KTI ko'rsatiladi, soliq taqvimi
+          YaTT 4% ni tanlaydi. Kredit paketi rozilik bilan bank paneliga tushadi.
+        </p>
+      </div>
+      <div className="grid sm:grid-cols-5 gap-2">
+        {[
+          ["1", "Ovoz / OCR", "Narx yig'ish"],
+          ["2", "BozorPredict", "14 kun prognoz"],
+          ["3", "Fin-LLM", "Qonun / dastur"],
+          ["4", "Simulyator", "CAPEX · DTI · KTI"],
+          ["5", "Matchmaking", "Partiya + shartnoma"],
+        ].map(([n, t, d]) => (
+          <div key={n} className="border border-line rounded-2xl p-3 bg-panel/60">
+            <div className="text-violet-400 text-xs">Qatlam {n}</div>
+            <div className="font-medium text-white">{t}</div>
+            <div className="text-xs text-slate-400">{d}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -60,7 +60,7 @@ export default function AppLayout() {
             ))}
           </select>
         </header>
-        <main className="p-4 md:p-6 max-w-6xl mx-auto">
+        <main className="p-4 md:p-6 max-w-6xl mx-auto w-full">
           <Outlet />
         </main>
       </div>

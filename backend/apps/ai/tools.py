@@ -124,6 +124,41 @@ def ledger_report(period="month"):
     return report(factory.get("/", {"period": period})).data
 
 
+def ingest_price(text: str):
+    from apps.prices.views import ingest
+
+    factory = __import__("rest_framework.test", fromlist=["APIRequestFactory"]).APIRequestFactory()
+    return ingest(factory.post("/", {"text": text}, format="json")).data
+
+
+def confirm_price(observation_id: int, ok: bool = True):
+    from apps.prices.views import confirm
+
+    factory = __import__("rest_framework.test", fromlist=["APIRequestFactory"]).APIRequestFactory()
+    return confirm(factory.post("/", {"ok": ok}, format="json"), pk=int(observation_id)).data
+
+
+SECTIONS = {
+    "pulse": {"route": "/pulse", "label": "Bozor pulsi"},
+    "market": {"route": "/pulse?tab=bozor", "label": "Bozor paneli"},
+    "lot": {"route": "/pulse?tab=partiya", "label": "Partiya xaridi"},
+    "arbitrage": {"route": "/pulse?tab=arbitraj", "label": "Arbitraj"},
+    "plan": {"route": "/plan", "label": "Biznes-reja"},
+    "stress": {"route": "/plan?tab=stress", "label": "Stress-test"},
+    "credit": {"route": "/plan?tab=kredit", "label": "Kredit markazi"},
+    "tax": {"route": "/plan?tab=soliq", "label": "Soliq"},
+    "package": {"route": "/plan?tab=paket", "label": "Kredit paketi"},
+    "ledger": {"route": "/ledger", "label": "Ovozli daftar"},
+    "profile": {"route": "/profile", "label": "Profil"},
+    "agent": {"route": "/agent", "label": "AI chat"},
+}
+
+
+def open_section(section: str):
+    key = (section or "").lower().strip()
+    return SECTIONS.get(key) or SECTIONS["pulse"]
+
+
 def search_knowledge(query: str):
     from apps.ai.models import KnowledgeChunk
 
@@ -149,6 +184,9 @@ TOOLS = {
     "ledger_add": ledger_add,
     "ledger_report": ledger_report,
     "search_knowledge": search_knowledge,
+    "ingest_price": ingest_price,
+    "confirm_price": confirm_price,
+    "open_section": open_section,
 }
 
 

@@ -11,7 +11,7 @@ export default function TerminalChart({ slug, days, onDays }: { slug: string; da
   });
   const { data: fc } = useQuery({
     queryKey: ["fc", slug],
-    queryFn: () => api(`/api/forecast/?product=${slug}`),
+    queryFn: () => api(`/api/forecast/?product=${slug}&horizon=14`),
     enabled: !!slug,
   });
   const ref = useRef<HTMLDivElement>(null);
@@ -61,7 +61,7 @@ export default function TerminalChart({ slug, days, onDays }: { slug: string; da
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-display text-2xl">{data?.product?.name_uz || slug}</h2>
-          <p className="text-slate-400 text-sm">so'm / {data?.product?.unit} · sham grafik · 80% ishonch oralig'i</p>
+          <p className="text-slate-400 text-sm">so'm / {data?.product?.unit} · sham grafik · {fc?.horizon || 14} kunlik AI prognoz</p>
         </div>
         <div className="flex gap-2">
           {[7, 30, 90].map((d) => (
@@ -75,8 +75,16 @@ export default function TerminalChart({ slug, days, onDays }: { slug: string; da
         <span className={`px-3 py-1 rounded-full text-sm font-semibold ${color}`}>{sig}</span>
         <span className="text-sm text-slate-300">{fc?.comment}</span>
         <span className="chip">MAPE {fc?.mape ?? "—"}</span>
+        <span className="chip">ishonch {fc?.confidence ?? "—"}%</span>
         <span className="chip">DEMO</span>
       </div>
+      {(fc?.reasons || []).length > 0 && (
+        <ul className="mt-2 text-xs text-slate-400 list-disc ml-5 space-y-1">
+          {fc.reasons.map((r: string) => (
+            <li key={r}>{r}</li>
+          ))}
+        </ul>
+      )}
       <div ref={ref} className="mt-3 rounded-2xl overflow-hidden border border-line" />
       <div className="mt-4 overflow-x-auto rounded-2xl border border-line">
         <table className="w-full text-sm">
