@@ -1,48 +1,72 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+
+
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+
+    def _create_user(self, email, password, **extra):
+        if not email:
+            raise ValueError("Email majburiy")
+        email = self.normalize_email(email).lower()
+        user = self.model(email=email, **extra)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra):
+        extra.setdefault("is_staff", False)
+        extra.setdefault("is_superuser", False)
+        return self._create_user(email, password, **extra)
+
+    def create_superuser(self, email, password=None, **extra):
+        extra.setdefault("is_staff", True)
+        extra.setdefault("is_superuser", True)
+        extra.setdefault("role", User.Role.BUSINESS)
+        if extra.get("is_staff") is not True:
+            raise ValueError("Superuser is_staff=True bo'lishi kerak")
+        if extra.get("is_superuser") is not True:
+            raise ValueError("Superuser is_superuser=True bo'lishi kerak")
+        return self._create_user(email, password, **extra)
 
 
 class User(AbstractUser):
     class Role(models.TextChoices):
-        BUYER = "buyer", "Xaridor"
-        ENTREPRENEUR = "entrepreneur", "Tadbirkor"
-        SUPPLIER = "supplier", "Yetkazib beruvchi"
-        MARKET_ADMIN = "market_admin", "Bozor ma'muri"
-        BANK = "bank", "Bank"
-        ADMIN = "admin", "Admin"
+        BUSINESS = "business", "Tadbirkor"
+        FORWARDER = "forwarder", "Ekspeditor"
 
-    class Gender(models.TextChoices):
-        FEMALE = "female", "Ayol"
-        MALE = "male", "Erkak"
-
-    telegram_id = models.BigIntegerField(null=True, blank=True, unique=True)
+    username = None
+    email = models.EmailField(unique=True)
     phone = models.CharField(max_length=32, blank=True)
-    role = models.CharField(max_length=32, choices=Role.choices, default=Role.ENTREPRENEUR)
-    lang = models.CharField(max_length=8, default="uz")
-    district = models.ForeignKey(
-        "markets.District", null=True, blank=True, on_delete=models.SET_NULL, related_name="users"
-    )
-    market = models.ForeignKey(
-        "markets.Market", null=True, blank=True, on_delete=models.SET_NULL, related_name="users"
-    )
-    gender = models.CharField(max_length=16, choices=Gender.choices, blank=True)
-    birth_year = models.PositiveSmallIntegerField(null=True, blank=True)
-    stir = models.CharField(max_length=14, blank=True)
-    reputation = models.DecimalField(max_digits=5, decimal_places=2, default=1)
+    role = models.CharField(max_length=16, choices=Role.choices)
+    full_name = models.CharField(max_length=160, blank=True)
     consent_at = models.DateTimeField(null=True, blank=True)
-    points = models.IntegerField(default=0)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
     def __str__(self):
-        return self.get_full_name() or self.username
+        return self.email
 
 
-class AuditLog(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-    action = models.CharField(max_length=64)
-    object_type = models.CharField(max_length=64, blank=True)
-    object_id = models.CharField(max_length=64, blank=True)
-    payload = models.JSONField(default=dict, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+class BusinessProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="business_profile")
+    business_name = models.CharField(max_length=160, blank=True)
+    region = models.CharField(max_length=120, blank=True)
+    activity = models.CharField(max_length=120, blank=True)
+    market = models.CharField(max_length=160, blank=True)
 
-    class Meta:
-        ordering = ["-created_at"]
+    def __str__(self):
+        return self.business_name or f"business:{self.user_id}"
+
+
+class ForwarderProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="forwarder_profile")
+    vehicle = models.CharField(max_length=160, blank=True)
+    capacity = models.CharField(max_length=80, blank=True)
+    region = models.CharField(max_length=120, blank=True)
+
+    def __str__(self):
+        return self.vehicle or f"forwarder:{self.user_id}"

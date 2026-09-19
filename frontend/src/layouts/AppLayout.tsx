@@ -1,75 +1,93 @@
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { clearAuth, currentUser, navFor } from "../lib/api";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { clearSession, currentUser, logout, type Role } from "../lib/api";
 
-export default function AppLayout() {
-  const nav = useNavigate();
-  const loc = useLocation();
+const BUSINESS_NAV = [
+  { to: "/", label: "Bozor terminali" },
+  { to: "/plan", label: "Biznes reja" },
+  { to: "/adviser", label: "AI hamroh" },
+  { to: "/notebook", label: "Daftar" },
+  { to: "/wallet", label: "Karmon" },
+];
+
+const FORWARDER_NAV = [
+  { to: "/", label: "Bozor terminali" },
+  { to: "/notebook", label: "Daftar" },
+  { to: "/wallet", label: "Karmon" },
+  { to: "/plan", label: "Kalkulyator" },
+];
+
+export function AppLayout() {
   const user = currentUser();
-  const items = navFor(user?.role);
-  const roleLabel = user?.role === "buyer" ? "Xaridor" : user?.role === "entrepreneur" ? "Tadbirkor" : user?.role;
-  const initial = (user?.first_name || user?.username || "?").slice(0, 1).toUpperCase();
+  const nav = useNavigate();
+  const role = (user?.role || "business") as Role;
+  const items = role === "forwarder" ? FORWARDER_NAV : BUSINESS_NAV;
+  const name = user?.full_name || user?.email || "Foydalanuvchi";
+  const initials = name
+    .split(" ")
+    .map((x) => x[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  async function onLogout() {
+    await logout();
+    clearSession();
+    nav("/login");
+  }
 
   return (
-    <div className="min-h-screen flex text-ink">
-      <aside className="w-64 shrink-0 hidden md:flex flex-col border-r border-line bg-panel/80 backdrop-blur-md">
-        <div className="px-5 py-6">
-          <div className="font-display text-2xl font-extrabold tracking-tight">
-            Bozor<span className="text-accent">Puls</span>
-          </div>
-          <div className="text-[11px] text-muted mt-1 tracking-wide">
-            {user?.role === "buyer" ? "Arzon narx va xarid" : "Moliyaviy hamroh"}
+    <div className="react-shell">
+      <header className="exchange-header">
+        <div className="masthead">
+          <Link className="ex-brand" to="/">
+            Bozor<span>Puls</span>
+            <sup>AI</sup>
+          </Link>
+          <span className="ex-tagline">BIZNESNING YANGI RITMI</span>
+          <div className="mast-actions">
+            <span className="ex-session">
+              <b>{role === "forwarder" ? "Ekspeditor" : "Tadbirkor"}</b>
+            </span>
+            <Link className="ex-account" to="/profile">
+              <span className="avatar">{initials}</span>
+              <span>{name.split(" ")[0]}</span>
+            </Link>
+            <details className="ex-more">
+              <summary aria-label="Qo'shimcha menyu">•••</summary>
+              <div>
+                <Link to="/profile">Profil</Link>
+                <Link to="/notebook">Daftar</Link>
+                <button type="button" onClick={onLogout} style={{ all: "unset", cursor: "pointer", display: "block", padding: "8px 12px" }}>
+                  Chiqish
+                </button>
+              </div>
+            </details>
           </div>
         </div>
-        <nav className="flex-1 px-3 space-y-1">
-          {items.map((it) => (
-            <NavLink key={it.to} to={it.to} className={({ isActive }) => (isActive ? "bp-nav-on" : "bp-nav")}>
-              {it.label}
-            </NavLink>
-          ))}
-        </nav>
-        <div className="p-4 m-3 rounded-2xl bg-sand/80 border border-line">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-teal text-white flex items-center justify-center font-display font-bold text-sm">
-              {initial}
-            </div>
-            <div className="min-w-0">
-              <div className="text-sm font-semibold truncate">{user?.first_name || user?.username || "mehmon"}</div>
-              <div className="text-[11px] text-muted">{roleLabel}</div>
-            </div>
-          </div>
-          <button
-            type="button"
-            className="mt-3 text-xs font-medium text-accent hover:underline"
-            onClick={() => {
-              clearAuth();
-              nav("/");
-            }}
-          >
-            Chiqish
-          </button>
-        </div>
-      </aside>
-
-      <div className="flex-1 min-w-0 flex flex-col">
-        <header className="md:hidden sticky top-0 z-20 flex items-center justify-between gap-3 px-4 py-3 border-b border-line bg-panel/90 backdrop-blur-md">
-          <span className="font-display text-lg font-bold">
-            Bozor<span className="text-accent">Puls</span>
-          </span>
-          <select
-            className="bp-input !py-1.5 !w-auto max-w-[55%] text-sm"
-            onChange={(e) => nav(e.target.value)}
-            value={items.some((i) => i.to === loc.pathname) ? loc.pathname : items[0]?.to}
-          >
-            {items.map((it) => (
-              <option key={it.to} value={it.to}>
-                {it.label}
-              </option>
+        <div className="exchange-nav">
+          <nav>
+            {items.map((item) => (
+              <NavLink key={item.to} to={item.to} end={item.to === "/"}>
+                {item.label}
+                {item.to === "/adviser" ? <span className="tiny-ai">✦</span> : null}
+              </NavLink>
             ))}
-          </select>
-        </header>
-        <main className="p-4 md:p-8 max-w-6xl mx-auto w-full flex-1">
+          </nav>
+          <span className="ex-session">
+            MVP <b>LIVE</b>
+          </span>
+        </div>
+      </header>
+      <div className="exchange-shell">
+        <main className="exchange-content is-terminal" style={{ padding: "16px 20px 40px" }}>
           <Outlet />
         </main>
+        <footer className="exchange-footer">
+          <span>
+            BOZORPULS AI <b>© 2026</b>
+          </span>
+          <span>Yahoo Finance + open FX · Mahalliy proxy UZS</span>
+        </footer>
       </div>
     </div>
   );

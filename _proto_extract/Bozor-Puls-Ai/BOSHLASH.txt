@@ -1,0 +1,14 @@
+Bozor-Puls.Ai — qorong‘i dizayndagi interaktiv prototip
+
+1. ZIP faylni alohida papkaga oching.
+2. index.html faylini brauzerda oching.
+3. TZni Bozor-Puls-Ai-TZ.md faylida o‘qing.
+
+To‘liq lokal ko‘rish uchun Python o‘rnatilgan bo‘lsa, shu papkada terminal oching:
+python -m http.server 8000
+Keyin brauzerda http://localhost:8000 manzilini oching.
+Bu usul sayt ichidagi TZ sahifasini ham yuklaydi; file:// orqali u cheklanishi mumkin.
+
+Internet bo‘lmasa tashqi shrift o‘rniga tizim shrifti ishlatiladi.
+Bu demo: haqiqiy login, AI, to‘lov va jonli narxlar ulanmagan.
+Demo qaydlar sahifa yangilanganda boshlang‘ich holatiga qaytadi.

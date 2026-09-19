@@ -1,9 +1,0 @@
-{"input":"pomidor 8 ming","expect":{"product":"Pomidor","price":8000}}
-{"input":"Urganch bozorida kartoshka kilosi 4500","expect":{"product":"Kartoshka","price":4500}}
-{"input":"50 kglik qop un 450 ming","expect":{"product":"Un","price":9000}}
-{"input":"лук 3000 сум","expect":{"product":"Piyoz","price":3000}}
-{"input":"tuxum 10 talik 16 ming","expect":{"product":"Tuxum","price":1600}}
-{"input":"yarim tonna shakar 6 mln 200","expect":{"product":"Shakar","price":12400}}
-{"input":"go'sht 95 mingdan","expect":{"product":"Go'sht","price":95000}}
-{"input":"bugun 3 qop guruch qopi 450 mingdan sotdim","expect":{"ledger":"income","amount":1350000}}
-{"input":"ijaraga 2 million to'ladim","expect":{"ledger":"expense","amount":2000000}}

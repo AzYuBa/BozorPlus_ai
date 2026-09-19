@@ -1,34 +1,48 @@
-# BozorPuls AI
+# Bozor-Puls.Ai
 
-Bozor narxidan biznes-rejagacha: tadbirkorning AI hamrohi.
+Qora / grafit / to‘q yashil birja terminali — React + Django MVP.
 
-Hackathon: Umummilliy AI Xakaton · Xorazm · 17–20 sentabr 2026  
-Muammolar: **№19 Bozor-Analitika** + **№20 AI moliyaviy maslahatchi**  
-Trek: Tadbirkorlik · muammo egasi: O‘zbekiston Savdo-sanoat palatasi
+## Nima ishlaydi
 
-## Nima bu?
+- React/TSX frontend (Vite) — xuddi shu terminal dizayn
+- Haqiqiy ro‘yxat / kirish (email + parol, JWT)
+- Rollar: `business`, `forwarder`
+- Profil va kirim-chiqim (daftar) SQLite’da, foydalanuvchi izolyatsiyasi
+- Jonli OHLC grafik: Yahoo Finance futures + open.er-api.com USD/UZS → mahalliy UZS proxy
+- Biznes kalkulyator (mahalliy)
 
-Bitta ma’lumot yadrosi, ikki modul:
+## AI
 
-- **M1 Narx terminali** — crowd narxlar, sham grafik, `HOZIR OL / KUT` signali, AI xarid agenti (TOP-3, yetkazish bilan).
-- **M2 Xorazmiy** — ovozli daftar, real narxli biznes-reja, Monte-Karlo stress-test, kredit/soliq kalkulyatorlari, KTI (0–100).
+`backend/.env` ichida:
 
-Demo raqamlari `DEMO` belgisi bilan. Har bir moliyaviy javobda manba chipi va ogohlantirish bor.
-
-## Tez start (Windows / local SQLite)
-
-```bash
-copy .env.example .env
-cd backend
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py seed_demo
-python manage.py runserver
+```
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
 ```
 
-Boshqa terminal:
+Keyin Django’ni qayta ishga tushiring. Frontendga kalit yozilmaydi.
+
+## Hali ulanmagan
+
+- Ovoz / Telegram bot
+- To‘lov / karmon amallari
+- SMS OTP
+
+## Ishga tushirish
+
+### Backend
+
+```bash
+cd backend
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+# backend\.env: DJANGO_SECRET_KEY=dev-secret
+python manage.py migrate
+python manage.py runserver 8000
+```
+
+### Frontend
 
 ```bash
 cd frontend
@@ -36,54 +50,21 @@ npm install
 npm run dev
 ```
 
-- Web: http://localhost:5173  
-- API / Swagger: http://localhost:8000/api/docs/  
-- Admin: http://localhost:8000/admin/  (`admin` / `bozorpuls`)
+Brauzer: http://localhost:5173  
+API proxy: Vite `/api` → `http://127.0.0.1:8000`
 
-Demo kirish (web): Dilshod aka, sotuvchi, bozor ma’muri, bank.
+## API (qisqa)
 
-## Docker
+| Method | Path | Izoh |
+|--------|------|------|
+| POST | `/api/v1/auth/register/` | email, password, role, consent |
+| POST | `/api/v1/auth/login/` | email, password |
+| GET/PATCH | `/api/v1/me/` | profil |
+| GET/POST | `/api/v1/notebook/entries/` | daftar |
+| GET | `/api/v1/market/instruments/` | mahsulotlar + narx |
+| GET | `/api/v1/market/candles/?product=un&days=90` | OHLC shamlar |
+| GET | `/api/v1/market/fx/` | USD/UZS |
+| GET | `/api/v1/ai/status/` | AI sozlanganmi |
+| POST | `/api/v1/ai/chat/` | `{ message, history? }` |
 
-```bash
-copy .env.example .env
-docker compose up --build
-```
-
-Telegram bot (token `.env` da `TELEGRAM_BOT_TOKEN`):
-
-```bash
-docker compose --profile bot up bot
-# yoki
-python manage.py runbot
-```
-
-## Demo oqimi (2 daqiqa)
-
-1. Pulse: «Dehqon bozorida un, 50 kglik qopi 450 ming» → 9 000 so‘m/kg, tasdiq, tiker.
-2. Terminal `/product/un` — sham grafik, prognoz zonasi, signal.
-3. Agent: «Somsaxonaga 500 kg un kerak» → TOP-3 yakuniy narx.
-4. Biznes-reja → stress-test → Kredit markazi (KTI + 3 qadam) → soliq taqqoslovi → paketni bankka yuborish.
-
-## API (asosiy)
-
-| Metod | Yo‘l |
-| --- | --- |
-| POST | `/api/auth/demo/` |
-| POST | `/api/prices/ingest/` |
-| GET | `/api/prices/pulse/` `/api/prices/ohlc/` `/api/forecast/` |
-| POST | `/api/sourcing/search/` `/api/agent/chat/` |
-| POST | `/api/finance/loan/calc/` `/api/finance/tax/compare/` |
-| POST | `/api/plans/` `/api/plans/{id}/stress-test/` |
-
-## Testlar
-
-```bash
-cd backend
-pytest -q
-```
-
-## Stek
-
-Django 5 / DRF · React 18 + Vite + TypeScript · PostgreSQL/SQLite · Celery/Redis · aiogram 3
-
-TZ: `docs/BozorPuls_AI_TZ_v2.docx`
+Sirlar faqat `backend/.env` da. Frontendga API kalitlari yozilmaydi.

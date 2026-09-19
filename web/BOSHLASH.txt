@@ -1,0 +1,20 @@
+Bozor-Puls.Ai — Stage 1 (haqiqiy login + daftar)
+
+1. Backend:
+   cd backend
+   python -m venv .venv
+   .\.venv\Scripts\activate
+   pip install -r requirements.txt
+   # backend\.env ni yarating (namuna: .env.example)
+   python manage.py migrate
+   python manage.py runserver 8000
+
+2. Frontend:
+   cd web
+   python -m http.server 8080
+   Brauzer: http://localhost:8080
+
+3. Ro‘yxatdan o‘ting (email + parol), rolni tanlang, profil/daftarni saqlang.
+
+AI, jonli narx va to‘lov hali ulanmagan — soxta muvaffaqiyat ko‘rsatilmaydi.
+TZni Bozor-Puls-Ai-TZ.md da o‘qing.
